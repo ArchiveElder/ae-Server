@@ -1,7 +1,6 @@
 package com.ae.community.api;
 
 import com.ae.community.aws.S3Uploader;
-import com.ae.community.domain.CommunityUser;
 import com.ae.community.domain.Images;
 import com.ae.community.domain.Posting;
 

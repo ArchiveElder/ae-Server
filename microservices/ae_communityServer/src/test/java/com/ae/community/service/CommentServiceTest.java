@@ -1,7 +1,6 @@
 package com.ae.community.service;
 
 import com.ae.community.domain.Comment;
-import com.ae.community.domain.CommunityUser;
 import com.ae.community.domain.Posting;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

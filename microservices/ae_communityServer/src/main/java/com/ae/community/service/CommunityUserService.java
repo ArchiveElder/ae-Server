@@ -1,6 +1,5 @@
 package com.ae.community.service;
 
-import com.ae.community.domain.CommunityUser;
 import com.ae.community.repository.CommunityUserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

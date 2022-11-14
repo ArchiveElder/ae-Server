@@ -1,6 +1,5 @@
 package com.ae.community.validation;
 
-import com.ae.community.domain.CommunityUser;
 import com.ae.community.exception.chaebbiException;
 import com.ae.community.service.CommunityUserService;
 import lombok.RequiredArgsConstructor;

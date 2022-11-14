@@ -1,6 +1,5 @@
 package com.ae.community.service;
 
-import com.ae.community.domain.CommunityUser;
 import com.ae.community.domain.Posting;
 import com.ae.community.domain.Thumbup;
 import org.junit.jupiter.api.Assertions;

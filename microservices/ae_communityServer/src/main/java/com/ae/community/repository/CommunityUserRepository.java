@@ -1,6 +1,5 @@
 package com.ae.community.repository;
 
-import com.ae.community.domain.CommunityUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

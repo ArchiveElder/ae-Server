@@ -1,6 +1,5 @@
 package com.ae.community.config.security;
 
-import com.ae.community.domain.CommunityUser;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

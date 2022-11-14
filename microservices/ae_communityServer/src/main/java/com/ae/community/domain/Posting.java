@@ -23,6 +23,8 @@ public class Posting {
     private String title;
     private Timestamp createdAt;
     private String boardName;
+    private String nickname;
+    private int icon;
 
 
 
