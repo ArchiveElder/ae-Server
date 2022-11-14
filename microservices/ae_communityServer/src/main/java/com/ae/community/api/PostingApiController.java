@@ -58,7 +58,7 @@ public class PostingApiController {
         postValidationController.validationPost(content, title, boardName);
 
         Posting post = new Posting();
-        post = postingService.create(userIdx, content, title, boardName, "nickname", 9);
+        post = postingService.create(userIdx, content, title, boardName, user.get("nickname"), Integer.valueOf(user.get("icon")));
         postingService.save(post);
         Long postIdx = post.getIdx();
 
@@ -130,8 +130,12 @@ public class PostingApiController {
         log.info("Get 31-4 /allposts/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         postValidationController.validateBoardName(boardName);
+        String nickname = user.get("nickname");
+        int icon = Integer.valueOf(user.get("icon"));
+        String userIdxJwt = user.get("userIdx");
 
-        List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(pageable, boardName);
+        List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(nickname, icon, userIdxJwt, pageable, boardName);
+
         PostsLists postsLists = new PostsLists();
         postsLists.setPostsList(allPostsList);
         return ResponseEntity.ok().body(postsLists);

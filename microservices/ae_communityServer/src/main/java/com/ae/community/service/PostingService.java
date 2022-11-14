@@ -9,7 +9,6 @@ import com.ae.community.repository.PostingRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -117,7 +116,7 @@ public class PostingService {
         postDetailDto.setBoardName(post.getBoardName());
 
         postDetailDto.setNickname(post.getNickname());
-        postDetailDto.setIcon((int) (Math.random() *10));
+        postDetailDto.setIcon(post.getIcon());
         postDetailDto.setUserIdx(post.getUserIdx());
         postDetailDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
         postDetailDto.setImagesCount(imageList.size());
@@ -158,7 +157,7 @@ public class PostingService {
         return postDetailDto;
 
     }
-    public List<AllPostsListDto> getAllPostsInBoard(Pageable pageable, String boardName) {
+    public List<AllPostsListDto> getAllPostsInBoard(String nickname, int icon, String userIdxJwt, Pageable pageable, String boardName) {
         if(boardName.equals("all")) {
             return allPostsList(pageable);
         }
@@ -188,7 +187,26 @@ public class PostingService {
         Long groupPostsCnt = getGroupPostsCount(boardName);
         if(groupPostsCnt == 0) return allPostsList;
         Page<Posting> groupPostsList = postingRepository.findByBoardName(boardName, pageable);
-        for(Posting post : groupPostsList){
+        return setPostListDto(groupPostsList);
+    }
+
+
+
+    public List<AllPostsListDto> allPostsList(Pageable pageable) {
+        List<AllPostsListDto> allPostsList = new ArrayList<>();
+        // 게시글이 0개면 이후 로직 없이 return
+        Long postsCount = getAllPostCount();
+        if (postsCount == 0) {
+            return allPostsList;
+        } else {
+            Page<Posting> postingList = getAllPosts(pageable);
+            return setPostListDto(postingList);
+        }
+    }
+    public List<AllPostsListDto> setPostListDto(Page<Posting> postingList) {
+        List<AllPostsListDto> allPostsList = new ArrayList<>();
+
+        for (Posting post : postingList) {
             AllPostsListDto allPostsListDto = new AllPostsListDto();
 
             allPostsListDto.setPostIdx(post.getIdx());
@@ -196,7 +214,7 @@ public class PostingService {
             allPostsListDto.setTitle(post.getTitle());
 
             allPostsListDto.setUserIdx(post.getUserIdx());
-            allPostsListDto.setIcon((int) (Math.random()*10));
+            allPostsListDto.setIcon(post.getIcon());
             allPostsListDto.setNickname(post.getNickname());
 
             allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
@@ -214,49 +232,6 @@ public class PostingService {
             if(isScraped >0) allPostsListDto.setIsScraped(1);
             else allPostsListDto.setIsScraped(0);
             allPostsList.add(allPostsListDto);
-        }
-
-        return allPostsList;
-    }
-
-
-
-    public List<AllPostsListDto> allPostsList(Pageable pageable) {
-        List<AllPostsListDto> allPostsList = new ArrayList<>();
-        // 게시글이 0개면 이후 로직 없이 return
-        Long postsCount = getAllPostCount();
-        if (postsCount == 0) {
-            return allPostsList;
-        } else {
-            Page<Posting> postingList = getAllPosts(pageable);
-            for (Posting post : postingList) {
-                AllPostsListDto allPostsListDto = new AllPostsListDto();
-
-                allPostsListDto.setPostIdx(post.getIdx());
-                allPostsListDto.setBoardName(post.getBoardName());
-                allPostsListDto.setTitle(post.getTitle());
-
-                Long writerIdx = post.getUserIdx();
-                allPostsListDto.setUserIdx(writerIdx);
-                allPostsListDto.setIcon((int) (Math.random()*10));
-                allPostsListDto.setNickname(post.getNickname());
-
-                allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
-
-                Long likeCnt = thumbupService.getThumbupCount(post.getIdx());
-                Long commentCnt = commentService.getCommentCnt(post.getIdx());
-                Long imgCnt = imagesService.getImagesCnt(post.getIdx());
-                if(imgCnt >0) allPostsListDto.setHasImg(1);
-                else allPostsListDto.setHasImg(0);
-
-                allPostsListDto.setLikeCnt(likeCnt);
-                allPostsListDto.setCommentCnt(commentCnt);
-
-                Long isScraped = scrapService.countByUserIdxAndPostIdx(post.getUserIdx(), post.getIdx());
-                if(isScraped >0) allPostsListDto.setIsScraped(1);
-                else allPostsListDto.setIsScraped(0);
-                allPostsList.add(allPostsListDto);
-            }
         }
         return allPostsList;
     }
