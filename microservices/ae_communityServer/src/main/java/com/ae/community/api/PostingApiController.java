@@ -45,7 +45,7 @@ public class PostingApiController {
     @ApiOperation(value = "[POST] 31-1 게시글 작성 ", notes = "제목, 글내용, 이미지들을 넣어 게시글을 등록합니다")
     @PostMapping(value = "/{userIdx}" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> uploadPost(@PathVariable(value = "userIdx") Long userIdx,
-                                           @AuthenticationPrincipal String jwtUserId,
+                                           @AuthenticationPrincipal HashMap<String,String> user,
                                            @ApiParam(value = "이미지파일 리스트") @RequestParam(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
                                            @ApiParam(value = "게시글 제목") @RequestParam(value="title", required =true) String title,
                                            @ApiParam(value = "게시글 내용") @RequestParam(value="content", required = true) String content,
@@ -54,7 +54,7 @@ public class PostingApiController {
     ) throws IOException {
 
         log.info("POST 31-1 /posting/{userIdx}");
-        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         postValidationController.validationPost(content, title, boardName);
 
         Posting post = new Posting();
@@ -76,11 +76,11 @@ public class PostingApiController {
     @DeleteMapping ("/{userIdx}/{postIdx}")
     public ResponseEntity<Void> deletePost(@PathVariable (value = "userIdx") Long userIdx,
                                            @PathVariable (value = "postIdx") Long postIdx,
-                                           @AuthenticationPrincipal String jwtUserId
+                                           @AuthenticationPrincipal HashMap<String,String> user
     ){
         log.info("Delete 31-2 /posting/{userIdx}/{postIdx}");
 
-        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         postValidationController.validateDeletePost(postIdx);
 
         postingService.deletePost(postIdx);
@@ -94,7 +94,7 @@ public class PostingApiController {
     @PostMapping(value = "/update/{userIdx}/{postIdx}",  consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> updatePost(@PathVariable (value = "userIdx") Long userIdx,
                                            @PathVariable (value = "postIdx") Long postIdx,
-                                           @AuthenticationPrincipal String jwtUserId,
+                                           @AuthenticationPrincipal HashMap<String,String> user,
                                            @ApiParam(value = "이미지파일 리스트") @RequestParam(value= "multipartFileList", required = false) List<MultipartFile> multipartFileList,
                                            @ApiParam(value = "게시글 제목") @RequestParam(value="title", required =true) String updateTitle,
                                            @ApiParam(value = "게시글 내용") @RequestParam(value="content", required = true) String updateContent,
@@ -102,7 +102,7 @@ public class PostingApiController {
                                            ) throws IOException {
         log.info("Post 31-3 /posting/update/{userIdx}/{postIdx}");
 
-        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         postValidationController.validationPost(updateTitle, updateContent, updateBoardName);
 
         Posting targetPost = postValidationController.validationPostExist(postIdx);
@@ -123,12 +123,12 @@ public class PostingApiController {
     @ApiOperation(value = "[GET] 31-4 게시판에 해당하는 게시글 목록 조회   ", notes = " 게시판에 해당하는 게시글 목록을 조회 합니다.")
     @GetMapping("/board/{userIdx}/{boardName}")
     public ResponseEntity<PostsLists> allPostsList(@PathVariable (value = "userIdx") Long userIdx,
-                                                              @PathVariable (value = "boardName") String boardName,
-                                                              @AuthenticationPrincipal String jwtUserId,
-                                                              @PageableDefault(size=10) Pageable pageable){
+                                                   @PathVariable (value = "boardName") String boardName,
+                                                   @AuthenticationPrincipal HashMap<String,String> user,
+                                                   @PageableDefault(size=10) Pageable pageable){
 
         log.info("Get 31-4 /allposts/{userIdx}");
-        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         postValidationController.validateBoardName(boardName);
 
         List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(pageable, boardName);
@@ -164,10 +164,11 @@ public class PostingApiController {
      * */
     @ApiOperation(value = "[GET] 내가 쓴 게시글 조회  ", notes = "userIdx로 내가 쓴 게시글들을 조회 합니다.")
     @GetMapping("/mypost/{userIdx}")
-    public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
+    public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx,
+                                                        @AuthenticationPrincipal HashMap<String,String> user,
+                                                        @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /mypost/{userIdx}");
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
 
         CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx, pageable);
 
@@ -180,10 +181,11 @@ public class PostingApiController {
      * */
     @ApiOperation(value = "[GET] 내가 스크랩한 게시글 조회  ", notes = "userIdx로 내가 스크랩한 게시글들을 조회 합니다.")
     @GetMapping("/myscrap/{userIdx}")
-    public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
+    public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx,
+                                                          @AuthenticationPrincipal HashMap<String,String> user,
+                                                          @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /myscrap/{userIdx}");
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
 
         CheckMyScrapsDto checkMyScrapsDto = postingService.checkMyScraps(userIdx, pageable);
 
