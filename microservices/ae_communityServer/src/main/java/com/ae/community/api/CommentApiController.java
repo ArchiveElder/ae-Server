@@ -15,6 +15,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+
 @Api(tags = "Comment API", description = "댓글 API")
 @RestController
 @RequiredArgsConstructor
@@ -30,10 +32,11 @@ public class CommentApiController {
      */
     @ApiOperation(value = "[POST] 40-1 댓글 작성 ", notes = "postIdx, 댓글 내용을 넣어 댓글을 등록합니다")
     @PostMapping("/{userIdx}")
-    public ResponseEntity<?> createComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId,  @RequestBody PostCommentReqDto request) {
-        //validation 로직
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+    public ResponseEntity<?> createComment(@PathVariable(value = "userIdx", required = false) Long userIdx,
+                                           @AuthenticationPrincipal HashMap<String,String> user,
+                                           @RequestBody PostCommentReqDto request) {
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
+
         commentValidationController.validateComment(request);
 
         Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent(), "nickname", 9);
@@ -47,10 +50,12 @@ public class CommentApiController {
      */
     @ApiOperation(value = "[DELETE] 40-2 댓글 삭제 ", notes = "commentIdx를 넣어 댓글을 삭제합니다")
     @DeleteMapping("/{userIdx}")
-    public ResponseEntity<?> deleteComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteCommentReqDto request) {
-        //validation 로직
-        userValidationController.validateUserByJwt(jwtUserId);
-        userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
+    public ResponseEntity<?> deleteComment(@PathVariable(value = "userIdx", required = false) Long userIdx,
+                                           @AuthenticationPrincipal HashMap<String,String> user,
+                                           @RequestBody DeleteCommentReqDto request) {
+        
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
+
         commentValidationController.validateDeleteComment(userIdx, request.getCommentIdx());
 
         commentService.deleteComment(request.getCommentIdx());
