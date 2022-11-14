@@ -32,13 +32,15 @@ public class PostingService {
 
     public Posting save(Posting post) {  return postingRepository.save(post); }
 
-    public Posting create(Long userIdx, String content, String title, String boardName) {
+    public Posting create(Long userIdx, String content, String title, String boardName, String nickname, int icon) {
         Posting post = new Posting();
         post.setUserIdx(userIdx);
         post.setContent(content);
         post.setTitle(title);
         post.setCreatedAt(new Timestamp(System.currentTimeMillis()));
         post.setBoardName(boardName);
+        post.setNickname(nickname);
+        post.setIcon(icon);
 
         return post;
     }
@@ -66,10 +68,9 @@ public class PostingService {
         Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
         List<PostsListDto> postsLists = postings.stream()
                 .map(m-> {
-                    Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyPosts.setPostsLists(postsLists);
@@ -84,13 +85,10 @@ public class PostingService {
 
         List<PostsListDto> postsLists = postings.stream()
                 .map(m-> {
-                    Optional<CommunityUser> communityUser = userService.findByUserIdx(m.getUserIdx());
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    if(communityUser.isPresent()) {
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
 
-                        return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), communityUser.get().getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
-                    }
 
                     return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })

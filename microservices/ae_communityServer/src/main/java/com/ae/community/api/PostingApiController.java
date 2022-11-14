@@ -57,7 +57,7 @@ public class PostingApiController {
         postValidationController.validationPost(content, title, boardName);
 
         Posting post = new Posting();
-        post = postingService.create(userIdx, content, title, boardName);
+        post = postingService.create(userIdx, content, title, boardName, "nickname", 9);
         postingService.save(post);
         Long postIdx = post.getIdx();
 
@@ -128,7 +128,6 @@ public class PostingApiController {
 
         log.info("Get 31-4 /allposts/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
-
         postValidationController.validateBoardName(boardName);
 
         List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(user, pageable, boardName);
