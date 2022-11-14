@@ -1,6 +1,7 @@
 package com.ae.community.config.security;
 
 import com.ae.community.exception.chaebbiException;
+import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
-import static com.ae.community.exception.CodeAndMessage.EMPTY_JWT;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -37,16 +40,21 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("Filter is running...");
             log.info("token: " + token);
             if (token != null && !token.equalsIgnoreCase("null")) {
-                String userPk = jwtProvider.getUserPk(token);
-                String userId = jwtProvider.validateAndGetUserId(token);
-                if(userId.equals("INVALID JWT")) {
-                    log.info("*** This token is invlid*** ");
+                String userIdx = jwtProvider.getUserIdx(token);
+                String nickname = jwtProvider.getNickname(token);
+                String icon = jwtProvider.getIcon(token);
+                if(userIdx.equals("INVALID JWT-USERIDX") || nickname.equals("INVALID JWT-NICKNAME") || icon.equals("INVALID JWT-ICON")) {
+                    log.info("*** This token is invalid! *** ");
                 }
-                log.info("user PK : " + userPk);
-                log.info("Authenticated user ID : " + userId );
+                log.info("Authenticated user ID : " + userIdx );
+
+                HashMap<String,String> user = new HashMap<>();
+                user.put("userIdx", userIdx);
+                user.put("icon", icon);
+                user.put("nickname", nickname);
 
                 AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userId,
+                        user,
                         null,
                         AuthorityUtils.NO_AUTHORITIES
                 );
@@ -54,6 +62,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                 securityContext.setAuthentication(authentication);
                 SecurityContextHolder.setContext(securityContext);
+
             }
             if(token ==null) {
                 log.info("** token is null, Please check ");

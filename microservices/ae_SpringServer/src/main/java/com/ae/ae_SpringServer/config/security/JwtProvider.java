@@ -40,10 +40,13 @@ public class JwtProvider {
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secretKey)
-                .setSubject(user.getId().toString())
-                .setSubject(Integer.toString(user.getIcon()))
-                .setSubject(user.getNickname())
+                //.setSubject(user.getId().toString())
+                //.setSubject(Integer.toString(user.getIcon()))
+                //.setSubject(user.getNickname())
                 .setIssuer("app")
+                .claim("userIdx", user.getId().toString())
+                .claim("icon", Integer.toString(user.getIcon()))
+                .claim("nickname", user.getNickname())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .compact();

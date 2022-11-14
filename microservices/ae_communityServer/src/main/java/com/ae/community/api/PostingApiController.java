@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 
 @Slf4j
@@ -145,11 +146,10 @@ public class PostingApiController {
     @GetMapping("/post/{userIdx}/{postIdx}")
     public ResponseEntity<PostDetailDto> detailPost(@PathVariable (value = "userIdx") Long userIdx,
                                                     @PathVariable (value = "postIdx") Long postIdx,
-                                                    @AuthenticationPrincipal String jwtUserId
-    ) {
+                                                    @AuthenticationPrincipal HashMap<String,String> user
+                                                    ) {
         log.info("Get 31-5 /post/{userIdx}/{postIdx}");
-
-        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        //userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
         Posting post = postValidationController.validationPostExist(postIdx);
         List<Images> imageList = imagesService.findByPostIdx(postIdx);
 

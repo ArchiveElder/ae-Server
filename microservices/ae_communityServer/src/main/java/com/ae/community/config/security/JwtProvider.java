@@ -29,21 +29,45 @@ public class JwtProvider {
     }
 
 
-    // Token 내용을 뜯어서 id 얻기
-    public String validateAndGetUserId(String token) {
+    // Token 내용을 뜯어서 userIdx, nickname,
+    public String getUserIdx(String token) {
         try{
-            Claims claims = Jwts.parser()
+            return Jwts.parser()
                     .setSigningKey(secretKey)
                     .parseClaimsJws(token)
-                    .getBody();
-            return claims.getSubject();
-        } catch (Exception ex) {
+                    .getBody()
+                    .get("userIdx", String.class);
+        }catch (Exception ex) {
             ex.printStackTrace();
-            log.error("*** token 내용에 에러가 있음 -- JwtProvide");
-            return "INVALID JWT";
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-USERIDX";
         }
     }
-    public String getUserPk(String token) {
-        return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody().getSubject();
+    public String getNickname(String token) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("nickname", String.class);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-NICKNAME";
+        }
     }
+    public String getIcon(String token) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("icon", String.class);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-ICON";
+        }
+    }
+
 }
