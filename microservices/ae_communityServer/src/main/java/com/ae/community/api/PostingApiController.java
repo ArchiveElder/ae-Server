@@ -149,7 +149,7 @@ public class PostingApiController {
                                                     @AuthenticationPrincipal HashMap<String,String> user
                                                     ) {
         log.info("Get 31-5 /post/{userIdx}/{postIdx}");
-        //userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
         Posting post = postValidationController.validationPostExist(postIdx);
         List<Images> imageList = imagesService.findByPostIdx(postIdx);
 
