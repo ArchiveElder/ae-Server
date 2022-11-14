@@ -36,7 +36,6 @@ public class ThumbupApiController {
     @PostMapping("/{userIdx}")
     public ResponseEntity<?> createThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody PostThumbupReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         thumbupValidationController.validatePost(request.getPostIdx());
@@ -58,7 +57,6 @@ public class ThumbupApiController {
     @DeleteMapping("/{userIdx}")
     public ResponseEntity<?> deleteThumbup(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteThumbupReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         thumbupValidationController.validatePost(request.getPostIdx());
