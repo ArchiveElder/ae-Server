@@ -39,7 +39,7 @@ public class CommentApiController {
 
         commentValidationController.validateComment(request);
 
-        Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent(), "nickname", 9);
+        Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent(), user.get("nickname"), Integer.parseInt(user.get("icon")));
         Long commentIdx = commentService.createComment(comment);
         return ResponseEntity.ok().body(new PostCommentResDto(commentIdx));
     }

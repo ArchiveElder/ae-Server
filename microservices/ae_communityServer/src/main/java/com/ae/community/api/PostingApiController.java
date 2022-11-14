@@ -170,7 +170,7 @@ public class PostingApiController {
         log.info("Post 31-6 /mypost/{userIdx}");
         userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
 
-        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx, pageable);
+        CheckMyPostsDto checkMyPostsDto = postingService.checkMyPosts(userIdx, user.get("nickname"), Integer.parseInt(user.get("icon")), pageable);
 
 
         return ResponseEntity.ok().body(checkMyPostsDto);
