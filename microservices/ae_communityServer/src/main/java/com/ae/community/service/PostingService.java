@@ -120,12 +120,11 @@ public class PostingService {
         postDetailDto.setBoardName(post.getBoardName());
 
         Long writerIdx = findById(postIdx).get().getUserIdx();
-        CommunityUser user = userService.findByUserIdx(writerIdx).get();
+        //CommunityUser user = userService.findByUserIdx(writerIdx).get();
 
-        String nickname = user.getNickname();
-        postDetailDto.setNickname(nickname);
+        postDetailDto.setNickname(post.getNickname());
         postDetailDto.setIcon((int) (Math.random() *10));
-        postDetailDto.setUserIdx(user.getUserIdx());
+        postDetailDto.setUserIdx(post.getUserIdx());
         postDetailDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
         postDetailDto.setImagesCount(imageList.size());
         if(imageList.size() != 0) {
@@ -152,9 +151,8 @@ public class PostingService {
         if(commentCount >0) {
             List<Comment> comments = commentService.getCommentList(postIdx);
             for(Comment comment: comments) {
-                Optional<CommunityUser> writer = userService.findByUserIdx(comment.getUserIdx());
-                String writerNickname = writer.get().getNickname();
-                Long writerUserIdx = writer.get().getUserIdx();
+                String writerNickname = comment.getNickname();
+                Long writerUserIdx = comment.getUserIdx();
                 commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerUserIdx, writerNickname, (int) (Math.random() * 10)
                         , new SimpleDateFormat("yyyy.MM.dd HH:mm").format(comment.getCreatedAt())
                         ,comment.getContent()));
@@ -166,9 +164,9 @@ public class PostingService {
         return postDetailDto;
 
     }
-    public List<AllPostsListDto> getAllPostsInBoard(CommunityUser user, Pageable pageable, String boardName) {
+    public List<AllPostsListDto> getAllPostsInBoard(Pageable pageable, String boardName) {
         if(boardName.equals("all")) {
-            return allPostsList(user, pageable);
+            return allPostsList(pageable);
         }
         switch (boardName) {
             case "daily":
@@ -188,10 +186,10 @@ public class PostingService {
                 break;
             default: boardName="일상"; break;
         }
-        return boardPostsList(user,pageable, boardName);
+        return boardPostsList(pageable, boardName);
     }
 
-    private List<AllPostsListDto> boardPostsList(CommunityUser user, Pageable pageable, String boardName) {
+    private List<AllPostsListDto> boardPostsList(Pageable pageable, String boardName) {
         List<AllPostsListDto> allPostsList = new ArrayList<>();
         Long groupPostsCnt = getGroupPostsCount(boardName);
         if(groupPostsCnt == 0) return allPostsList;
@@ -203,11 +201,9 @@ public class PostingService {
             allPostsListDto.setBoardName(post.getBoardName());
             allPostsListDto.setTitle(post.getTitle());
 
-            Long writerIdx = post.getUserIdx();
-            Optional<CommunityUser> writer = userService.findByUserIdx(writerIdx);
-            allPostsListDto.setUserIdx(writerIdx);
+            allPostsListDto.setUserIdx(post.getUserIdx());
             allPostsListDto.setIcon((int) (Math.random()*10));
-            allPostsListDto.setNickname(writer.get().getNickname());
+            allPostsListDto.setNickname(post.getNickname());
 
             allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
 
@@ -220,7 +216,7 @@ public class PostingService {
             allPostsListDto.setLikeCnt(likeCnt);
             allPostsListDto.setCommentCnt(commentCnt);
 
-            Long isScraped = scrapService.countByUserIdxAndPostIdx(user.getUserIdx(), post.getIdx());
+            Long isScraped = scrapService.countByUserIdxAndPostIdx(post.getUserIdx(), post.getIdx());
             if(isScraped >0) allPostsListDto.setIsScraped(1);
             else allPostsListDto.setIsScraped(0);
             allPostsList.add(allPostsListDto);
@@ -231,7 +227,7 @@ public class PostingService {
 
 
 
-    public List<AllPostsListDto> allPostsList(CommunityUser user, Pageable pageable) {
+    public List<AllPostsListDto> allPostsList(Pageable pageable) {
         List<AllPostsListDto> allPostsList = new ArrayList<>();
         // 게시글이 0개면 이후 로직 없이 return
         Long postsCount = getAllPostCount();
@@ -247,10 +243,9 @@ public class PostingService {
                 allPostsListDto.setTitle(post.getTitle());
 
                 Long writerIdx = post.getUserIdx();
-                Optional<CommunityUser> writer = userService.findByUserIdx(writerIdx);
                 allPostsListDto.setUserIdx(writerIdx);
                 allPostsListDto.setIcon((int) (Math.random()*10));
-                allPostsListDto.setNickname(writer.get().getNickname());
+                allPostsListDto.setNickname(post.getNickname());
 
                 allPostsListDto.setCreatedAt(new SimpleDateFormat("yyyy.MM.dd HH:mm").format(post.getCreatedAt()));
 
@@ -263,7 +258,7 @@ public class PostingService {
                 allPostsListDto.setLikeCnt(likeCnt);
                 allPostsListDto.setCommentCnt(commentCnt);
 
-                Long isScraped = scrapService.countByUserIdxAndPostIdx(user.getUserIdx(), post.getIdx());
+                Long isScraped = scrapService.countByUserIdxAndPostIdx(post.getUserIdx(), post.getIdx());
                 if(isScraped >0) allPostsListDto.setIsScraped(1);
                 else allPostsListDto.setIsScraped(0);
                 allPostsList.add(allPostsListDto);

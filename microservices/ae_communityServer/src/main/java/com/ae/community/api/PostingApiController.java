@@ -130,7 +130,7 @@ public class PostingApiController {
         userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
         postValidationController.validateBoardName(boardName);
 
-        List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(user, pageable, boardName);
+        List<AllPostsListDto> allPostsList = postingService.getAllPostsInBoard(pageable, boardName);
         PostsLists postsLists = new PostsLists();
         postsLists.setPostsList(allPostsList);
         return ResponseEntity.ok().body(postsLists);
