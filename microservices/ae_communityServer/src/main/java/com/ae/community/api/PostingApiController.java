@@ -166,7 +166,6 @@ public class PostingApiController {
     @GetMapping("/mypost/{userIdx}")
     public ResponseEntity<CheckMyPostsDto> checkMyPosts(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /mypost/{userIdx}");
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
 
@@ -183,7 +182,6 @@ public class PostingApiController {
     @GetMapping("/myscrap/{userIdx}")
     public ResponseEntity<CheckMyScrapsDto> checkMyScraps(@PathVariable (value = "userIdx") Long userIdx, @AuthenticationPrincipal String jwtUserId, @PageableDefault(size=10) Pageable pageable) {
         log.info("Post 31-6 /myscrap/{userIdx}");
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
 

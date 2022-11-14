@@ -88,9 +88,6 @@ public class PostingService {
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
                     return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
-
-
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), "", m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyScraps.setPostsLists(postsLists);
