@@ -23,26 +23,11 @@ public class JwtProvider {
 
     private Long tokenValidMillisecond = 60 * 60 * 1000L;
 
-    //private final CustomUserDetailsService userDetailsService;
-
     @PostConstruct
     protected void init() {
         secretKey = Base64.getEncoder().encodeToString(secretKey.getBytes());
     }
 
-    // Jwt 생성
-    public String createToken(CommunityUser user) {
-        // 기한은 지금부터 90일로 설정
-        Date expiryDate = Date.from(Instant.now().plus(90, ChronoUnit.DAYS));
-
-        return Jwts.builder()
-                .signWith(SignatureAlgorithm.HS256, secretKey)
-                .setSubject(user.getUserIdx().toString())
-                .setIssuer("app")
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .compact();
-    }
 
     // Token 내용을 뜯어서 id 얻기
     public String validateAndGetUserId(String token) {
