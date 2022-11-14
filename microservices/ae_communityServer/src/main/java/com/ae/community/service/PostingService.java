@@ -62,14 +62,14 @@ public class PostingService {
 
     }
 
-    public CheckMyPostsDto checkMyPosts(Long userIdx, Pageable pageable) {
+    public CheckMyPostsDto checkMyPosts(Long userIdx, String nickname, int icon, Pageable pageable) {
         CheckMyPostsDto checkMyPosts = new CheckMyPostsDto();
         Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);
         List<PostsListDto> postsLists = postings.stream()
                 .map(m-> {
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() * 10), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), icon, nickname, m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyPosts.setPostsLists(postsLists);
@@ -86,7 +86,7 @@ public class PostingService {
                 .map(m-> {
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), (int) (Math.random() *10), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), m.getIcon(), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyScraps.setPostsLists(postsLists);
