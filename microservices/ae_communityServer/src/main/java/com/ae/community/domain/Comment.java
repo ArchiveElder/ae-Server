@@ -29,12 +29,17 @@ public class Comment {
     @Column(name = "created_at")
     private Timestamp createdAt;
 
-    public static Comment createComment(Long userIdx, Long postIdx, String content) {
+    private String nickname;
+    private int icon;
+
+    public static Comment createComment(Long userIdx, Long postIdx, String content, String nickname, int icon) {
         Comment comment = new Comment();
         comment.setUserIdx(userIdx);
         comment.setPostIdx(postIdx);
         comment.setContent(content);
         comment.setCreatedAt(new Timestamp(System.currentTimeMillis()));
+        comment.setNickname(nickname);
+        comment.setIcon(icon);
         return comment;
     }
 }

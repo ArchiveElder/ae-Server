@@ -33,7 +33,6 @@ public class ScrapApiController {
     @PostMapping("/{userIdx}")
     public ResponseEntity<?> createScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody PostScrapReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         scrapValidationController.validatePost(request.getPostIdx());
@@ -55,7 +54,6 @@ public class ScrapApiController {
     @DeleteMapping("/{userIdx}")
     public ResponseEntity<?> deleteScrap(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteScrapReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         scrapValidationController.validatePost(request.getPostIdx());
