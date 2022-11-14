@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 public class PostingService {
     private final PostingRepository postingRepository;
     private final ImagesService imagesService;
-    private final CommunityUserService userService;
     private final ThumbupService thumbupService;
     private final CommentService commentService;
 
@@ -97,8 +96,6 @@ public class PostingService {
     }
 
 
-    public Long getPostsCount(Long userIdx) { return postingRepository.countByUserIdx(userIdx);}
-
     public Long getAllPostCount() {
         return postingRepository.count();
     }
@@ -118,9 +115,6 @@ public class PostingService {
         postDetailDto.setTitle(post.getTitle());
         postDetailDto.setContent(post.getContent());
         postDetailDto.setBoardName(post.getBoardName());
-
-        Long writerIdx = findById(postIdx).get().getUserIdx();
-        //CommunityUser user = userService.findByUserIdx(writerIdx).get();
 
         postDetailDto.setNickname(post.getNickname());
         postDetailDto.setIcon((int) (Math.random() *10));
