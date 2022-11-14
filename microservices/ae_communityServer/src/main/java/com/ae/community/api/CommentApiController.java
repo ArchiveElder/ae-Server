@@ -32,12 +32,11 @@ public class CommentApiController {
     @PostMapping("/{userIdx}")
     public ResponseEntity<?> createComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId,  @RequestBody PostCommentReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         commentValidationController.validateComment(request);
 
-        Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent());
+        Comment comment = Comment.createComment(userIdx, request.getPostIdx(), request.getContent(), "nickname", 9);
         Long commentIdx = commentService.createComment(comment);
         return ResponseEntity.ok().body(new PostCommentResDto(commentIdx));
     }
@@ -50,7 +49,6 @@ public class CommentApiController {
     @DeleteMapping("/{userIdx}")
     public ResponseEntity<?> deleteComment(@PathVariable(value = "userIdx", required = false) Long userIdx, @AuthenticationPrincipal String jwtUserId, @RequestBody DeleteCommentReqDto request) {
         //validation 로직
-        userValidationController.validateUser(userIdx);
         userValidationController.validateUserByJwt(jwtUserId);
         userValidationController.compareUserIdAndJwt(userIdx, jwtUserId);
         commentValidationController.validateDeleteComment(userIdx, request.getCommentIdx());
