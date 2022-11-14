@@ -127,7 +127,7 @@ public class PostingApiController {
                                                               @PageableDefault(size=10) Pageable pageable){
 
         log.info("Get 31-4 /allposts/{userIdx}");
-        CommunityUser user = userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, jwtUserId);
 
         postValidationController.validateBoardName(boardName);
 
