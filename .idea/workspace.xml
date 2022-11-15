@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e16e9ec8-e5d0-492d-85dc-def113fb25e5" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/spring-cloud/eureka_server/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/spring-cloud/eureka_server/build.gradle" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/spring-cloud/eureka_server/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/spring-cloud/eureka_server/src/main/resources/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/spring-cloud/eureka_server/src/main/java/com/ae/eureka_server/EurekaServerApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/spring-cloud/eureka_server/src/main/java/com/ae/eureka_server/EurekaServerApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,7 +26,10 @@
     "RunOnceActivity.OpenProjectViewOnStart": "true",
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
-    "last_opened_file_path": "C:/Users/82102/Documents/GitHub/ArchiveEverySecond/ae-Server"
+    "last_opened_file_path": "C:/Users/82102/Documents/GitHub/ArchiveEverySecond/ae-Server/spring-cloud/eureka_server/build.gradle",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -37,13 +40,9 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1668423580762</updated>
-
     </task>
     <servers />
   </component>
-
-      <workItem from="1668512994908" duration="975000" />
-
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
@@ -58,12 +57,4 @@
       </map>
     </option>
   </component>
-
-
-      <workItem from="1668512994908" duration="645000" />
-
-  <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="3" />
-  </component>
-
 </project>
