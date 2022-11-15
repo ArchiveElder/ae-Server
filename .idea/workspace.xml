@@ -21,11 +21,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/microservices/ae_communityServer/build.gradle" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/82102/Documents/GitHub/ArchiveEverySecond/ae-Server"
+  }
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -34,15 +37,13 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1668423580762</updated>
-<<<<<<< Updated upstream
+
     </task>
     <servers />
   </component>
-=======
+
       <workItem from="1668512994908" duration="975000" />
-    </task>
-    <servers />
-  </component>
+
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
@@ -57,5 +58,12 @@
       </map>
     </option>
   </component>
->>>>>>> Stashed changes
+
+
+      <workItem from="1668512994908" duration="645000" />
+
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+
 </project>
