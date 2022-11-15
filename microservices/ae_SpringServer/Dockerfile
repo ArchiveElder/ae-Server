@@ -1,0 +1,8 @@
+FROM openjdk:11
+COPY build/libs/ae_SpringServer-0.0.1-SNAPSHOT.jar .
+
+ARG ENVIRONMENT
+ENV SPRING_PROFILES_ACTIVE=${ENVIRONMENT}
+
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "ae_SpringServer-0.0.1-SNAPSHOT.jar"]
