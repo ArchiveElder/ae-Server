@@ -32,6 +32,7 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/record")
 public class RecordApiController {
     private final RecordService recordService;
     private final UserService userService;
@@ -39,7 +40,7 @@ public class RecordApiController {
 
 
     //[POST] 1-1 식단기록
-    @PostMapping(value = "/api/v2/record", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public  BaseResponse<RecordResponseDto> createRecord(@AuthenticationPrincipal String userId,
                                           @RequestParam (value = "image", required = false) MultipartFile multipartFile,
                                           @RequestParam (value = "text", required = true) String text,
@@ -154,7 +155,7 @@ public class RecordApiController {
     }
 
     // [POST] 1-4 식단기록 (직접, 이미지X)
-    @PostMapping("/api/v2/record-no-img")
+    @PostMapping("/record-no-img")
     public BaseResponse<RecordResponseDto> noImgRecord(@AuthenticationPrincipal String userId,
                                                        @RequestParam (value = "text", required = true) String text,
                                                        @RequestParam (value = "calory", required = false) String calory,
@@ -262,7 +263,7 @@ public class RecordApiController {
     }
 
     //[POST] 1-2 식단 날짜별 조회
-    @PostMapping("/api/v2/daterecord")
+    @PostMapping("/daterecord")
     public BaseResponse<DateRecordResponseDto> dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
@@ -330,7 +331,7 @@ public class RecordApiController {
     }
 
     //[POST] 1-3 식단 상세조회
-    @PostMapping("api/v2/detailrecord")
+    @PostMapping("detailrecord")
     public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -355,7 +356,7 @@ public class RecordApiController {
     }
 
     // [POST] 1-5  식단 수정(이미지O)
-    @PostMapping("/api/v2/record-update")
+    @PostMapping("/record-update")
     public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal String userId,
                                                           @RequestParam (value = "recordId", required = true) int recordId,
                                                           @RequestParam (value = "image", required = false) MultipartFile multipartFile,
@@ -485,7 +486,7 @@ public class RecordApiController {
 
 
     // [DELETE] 1-7 식단 삭제
-    @DeleteMapping("/api/v2/record")
+    @DeleteMapping
     public BaseResponse<String> deleteRecord(@AuthenticationPrincipal String userId, @RequestBody @Valid RecordDeleteRequestDto request) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);

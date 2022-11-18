@@ -39,6 +39,7 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/user")
 public class UserApiController {
     private final UserService userService;
     private final JwtProvider jwtProvider;
@@ -46,7 +47,7 @@ public class UserApiController {
 
     //[POST] 4-1 카카오 로그인
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
-    @PostMapping("/api/v2/login")
+    @PostMapping("/kakao-login")
     public BaseResponse<LoginResponseDto> loginByKakao(
             @RequestBody UserSocialLoginRequestDto socialLoginRequestDto) {
         String token = socialLoginRequestDto.getAccessToken();
@@ -86,14 +87,14 @@ public class UserApiController {
     }
 
     //[POST] 4-2 : 애플로그인 api
-    @PostMapping("/api/v2/apple-login")
+    @PostMapping("/apple-login")
     public BaseResponse<LoginResponseDto> loginByApple(@RequestBody UserSocialLoginRequestDto socialLoginRequestDto){
         return new BaseResponse<>(userService.login(socialLoginRequestDto));
 
     }
 
     // [POST] 3-3  회원 등록 (version 3 )
-    @PostMapping("/v3/signup")
+    @PostMapping("/signup")
     public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDtoV3 signupRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -141,7 +142,7 @@ public class UserApiController {
     }
 
     // [GET] 3-1 회원 정보 조회 for version3
-    @GetMapping("/v3/userinfo")
+    @GetMapping("/userinfo")
     public BaseResponse<UserInfoResponseDtoV3> info(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -158,7 +159,7 @@ public class UserApiController {
     }
 
     // [PUT] 3-2 회원 정보 수정 for version3
-    @PutMapping("/v3/userupdate")
+    @PutMapping("/info-update")
     public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -198,7 +199,7 @@ public class UserApiController {
     }
 
     // [DELETE] 3-4 회원 탈퇴
-    @DeleteMapping("/api/v2/userdelete")
+    @DeleteMapping
     public BaseResponse<String> deleteUser(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -216,7 +217,7 @@ public class UserApiController {
     }
 
     // [POST] 3-5 닉네임 중복확인
-    @PostMapping("/v3/nicknamecheck")
+    @PostMapping("/check-nickname")
     public BaseResponse<UserNicknameResponseDto> nicknameCheck(@RequestBody UserNicknameRequestDto request) {
         if(request.getNickname().isEmpty() || request.getNickname().equals("")) {
             return new BaseResponse<>(POST_EMPTY_NICKNAME);

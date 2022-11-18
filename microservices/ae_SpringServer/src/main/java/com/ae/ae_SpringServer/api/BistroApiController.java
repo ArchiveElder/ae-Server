@@ -26,6 +26,7 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/bistro")
 public class BistroApiController {
     private final BistroService bistroService;
     private final BookmarkService bookmarkService;
@@ -35,7 +36,7 @@ public class BistroApiController {
     private final BistroValidationController bistroValidationController;
 
     //[POST] 6-1 음식점 중분류 조회
-    @PostMapping("/api/v2/bistromiddle")
+    @PostMapping("/bistromiddle")
     public BaseResponse<ResultResponse> middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequestDto request) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -61,7 +62,7 @@ public class BistroApiController {
     }
 
     //[POST] 6-2 대분류,중분류별 음식점조회
-    @PostMapping("/api/v2/categories")
+    @PostMapping("/categories")
     public BaseResponse<CategoryListResponseDtoV2> categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequestDto request) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -107,7 +108,7 @@ public class BistroApiController {
     }
 
     //[POST] 6-3 (지도)음식점 전체 조회
-    @GetMapping("/api/v2/allbistro")
+    @GetMapping("/allbistro")
     public BaseResponse<ResultResponse> allBistro(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -136,7 +137,7 @@ public class BistroApiController {
     }
 
     // [POST] 6-4 음식점 대분류 카테고리 검색
-    @PostMapping("/api/category-main")
+    @PostMapping("/category-main")
     public ResponseEntity<?> getCategoryMain(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMainReqDto request) {
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
@@ -162,7 +163,7 @@ public class BistroApiController {
     }
 
     // [POST] 6-5 음식점 대분류, 중분류 카테고리별 검색
-    @PostMapping("/api/category-middle")
+    @PostMapping("/category-middle")
     public ResponseEntity<?> getCategoryMiddle(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMiddleReqDto request) {
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
@@ -189,7 +190,7 @@ public class BistroApiController {
     }
 
     // [POST] 6-6 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류’ 검색
-    @PostMapping("/api/bistro-category-main")
+    @PostMapping("/bistro-category-main")
     public ResponseEntity<?> getBistroMain(@AuthenticationPrincipal String userId, @RequestBody PostBistroMainReqDto request) {
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
@@ -217,7 +218,7 @@ public class BistroApiController {
     }
 
     // [POST] 6-7 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류&카테고리 중분류’ 검색
-    @PostMapping("/api/bistro-category-middle")
+    @PostMapping("/bistro-category-middle")
     public ResponseEntity<?> getBistroMiddle(@AuthenticationPrincipal String userId, @RequestBody PostBistroMiddleReqDto request) {
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
@@ -246,7 +247,7 @@ public class BistroApiController {
     }
 
     // [POST] 6-8 음식점 ‘장소(지역) 대분류&카테고리 대분류’ 검색
-    @PostMapping("/api/site-wide-category-main")
+    @PostMapping("/site-wide-category-main")
     public ResponseEntity<?> getSiteWideMain(@AuthenticationPrincipal String userId, @RequestBody PostSiteWideMainReqDto request) {
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
