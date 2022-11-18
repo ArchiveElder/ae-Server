@@ -26,6 +26,10 @@ public class CommentService {
         commentRepository.deleteByIdx(commentIdx);
     }
 
+    public void updateNickname(String nickname, Long userIdx) {
+        commentRepository.updateNickname(nickname, userIdx);
+    }
+
     public Optional<Comment> findByUserIdxAndIdx(Long userIdx, Long idx) {
         return commentRepository.findByUserIdxAndIdx(userIdx, idx);
     }
