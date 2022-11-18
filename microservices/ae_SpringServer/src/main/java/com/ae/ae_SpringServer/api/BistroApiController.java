@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
@@ -37,15 +38,16 @@ public class BistroApiController {
 
     //[POST] 6-1 음식점 중분류 조회
     @PostMapping("/bistromiddle")
-    public BaseResponse<ResultResponse> middle(@AuthenticationPrincipal String userId, @RequestBody @Valid MiddleRequestDto request) {
+    public BaseResponse<ResultResponse> middle(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid MiddleRequestDto request) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 
@@ -63,15 +65,16 @@ public class BistroApiController {
 
     //[POST] 6-2 대분류,중분류별 음식점조회
     @PostMapping("/categories")
-    public BaseResponse<CategoryListResponseDtoV2> categories(@AuthenticationPrincipal String userId, @RequestBody @Valid CategoryRequestDto request) {
+    public BaseResponse<CategoryListResponseDtoV2> categories(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid CategoryRequestDto request) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 
@@ -109,15 +112,16 @@ public class BistroApiController {
 
     //[POST] 6-3 (지도)음식점 전체 조회
     @GetMapping("/allbistro")
-    public BaseResponse<ResultResponse> allBistro(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResultResponse> allBistro(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         List<BistroV2> allBistro = bistroService.getBistroV2();
@@ -138,7 +142,8 @@ public class BistroApiController {
 
     // [POST] 6-4 음식점 대분류 카테고리 검색
     @PostMapping("/category-main")
-    public ResponseEntity<?> getCategoryMain(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMainReqDto request) {
+    public ResponseEntity<?> getCategoryMain(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody PostCategoryMainReqDto request) {
+        String userId = user.get("userIdx");
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
         bistroValidationController.validateCategoryMain(request.getMainCategory());
@@ -164,7 +169,8 @@ public class BistroApiController {
 
     // [POST] 6-5 음식점 대분류, 중분류 카테고리별 검색
     @PostMapping("/category-middle")
-    public ResponseEntity<?> getCategoryMiddle(@AuthenticationPrincipal String userId, @RequestBody PostCategoryMiddleReqDto request) {
+    public ResponseEntity<?> getCategoryMiddle(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody PostCategoryMiddleReqDto request) {
+        String userId = user.get("userIdx");
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
         bistroValidationController.validateCategoryMain(request.getMainCategory());
@@ -191,7 +197,8 @@ public class BistroApiController {
 
     // [POST] 6-6 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류’ 검색
     @PostMapping("/bistro-category-main")
-    public ResponseEntity<?> getBistroMain(@AuthenticationPrincipal String userId, @RequestBody PostBistroMainReqDto request) {
+    public ResponseEntity<?> getBistroMain(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody PostBistroMainReqDto request) {
+        String userId = user.get("userIdx");
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
         bistroValidationController.validateSiteWide(request.getSiteWide());
@@ -219,7 +226,8 @@ public class BistroApiController {
 
     // [POST] 6-7 음식점 ‘장소(지역) 대분류& 장소(지역) 중분류& 카테고리 대분류&카테고리 중분류’ 검색
     @PostMapping("/bistro-category-middle")
-    public ResponseEntity<?> getBistroMiddle(@AuthenticationPrincipal String userId, @RequestBody PostBistroMiddleReqDto request) {
+    public ResponseEntity<?> getBistroMiddle(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody PostBistroMiddleReqDto request) {
+        String userId = user.get("userIdx");
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
         bistroValidationController.validateSiteWide(request.getSiteWide());
@@ -248,7 +256,8 @@ public class BistroApiController {
 
     // [POST] 6-8 음식점 ‘장소(지역) 대분류&카테고리 대분류’ 검색
     @PostMapping("/site-wide-category-main")
-    public ResponseEntity<?> getSiteWideMain(@AuthenticationPrincipal String userId, @RequestBody PostSiteWideMainReqDto request) {
+    public ResponseEntity<?> getSiteWideMain(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody PostSiteWideMainReqDto request) {
+        String userId = user.get("userIdx");
         //validation 로직
         userValidationController.validateuser(Long.valueOf(userId));
         bistroValidationController.validateSiteWide(request.getSiteWide());

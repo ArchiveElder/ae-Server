@@ -98,15 +98,16 @@ public class UserApiController {
 
     // [POST] 3-3  회원 등록 (version 3 )
     @PostMapping("/signup")
-    public BaseResponse<String> signup(@AuthenticationPrincipal String userId, @RequestBody SignupRequestDtoV3 signupRequestDto) {
+    public BaseResponse<String> signup(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody SignupRequestDtoV3 signupRequestDto) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         if(signupRequestDto.getNickname().isEmpty() || signupRequestDto.getNickname().equals("")) {
@@ -146,18 +147,19 @@ public class UserApiController {
 
     // [GET] 3-1 회원 정보 조회 for version3
     @GetMapping("/userinfo")
-    public BaseResponse<UserInfoResponseDtoV3> info(@AuthenticationPrincipal String userId) {
+    public BaseResponse<UserInfoResponseDtoV3> info(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        return new BaseResponse<>(new UserInfoResponseDtoV3(user.getNickname(), user.getGender(), user.getAge(), user.getHeight(), user.getWeight(), user.getIcon(), user.getActivity()));
+        return new BaseResponse<>(new UserInfoResponseDtoV3(jwtUser.getNickname(), jwtUser.getGender(), jwtUser.getAge(), jwtUser.getHeight(), jwtUser.getWeight(), jwtUser.getIcon(), jwtUser.getActivity()));
 
     }
 
@@ -206,15 +208,16 @@ public class UserApiController {
 
     // [DELETE] 3-4 회원 탈퇴
     @DeleteMapping
-    public BaseResponse<String> deleteUser(@AuthenticationPrincipal String userId) {
+    public BaseResponse<String> deleteUser(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if(user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if(jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 

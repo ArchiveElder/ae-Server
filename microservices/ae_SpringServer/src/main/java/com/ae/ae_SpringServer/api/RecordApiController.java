@@ -25,6 +25,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
@@ -41,7 +42,7 @@ public class RecordApiController {
 
     //[POST] 1-1 식단기록
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public  BaseResponse<RecordResponseDto> createRecord(@AuthenticationPrincipal String userId,
+    public  BaseResponse<RecordResponseDto> createRecord(@AuthenticationPrincipal HashMap<String,String> user,
                                           @RequestParam (value = "image", required = false) MultipartFile multipartFile,
                                           @RequestParam (value = "text", required = true) String text,
                                           @RequestParam (value = "calory", required = false) String calory,
@@ -53,7 +54,7 @@ public class RecordApiController {
                                           @RequestParam (value = "amount", required = false) Double amount,
                                           @RequestParam (value = "meal", required = true) int meal
                                              ) throws IOException {
-
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -61,8 +62,8 @@ public class RecordApiController {
             return new BaseResponse<>(EMPTY_JWT);
         }
 
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
@@ -147,7 +148,7 @@ public class RecordApiController {
         }
 
         Record record = Record.createRecord(img_url, text, date, calory, carb, protein, fat,
-                rdate, rtime, amount, meal, user);
+                rdate, rtime, amount, meal, jwtUser);
 
         Long id = recordService.record(record);
 
@@ -156,7 +157,7 @@ public class RecordApiController {
 
     // [POST] 1-4 식단기록 (직접, 이미지X)
     @PostMapping("/record-no-img")
-    public BaseResponse<RecordResponseDto> noImgRecord(@AuthenticationPrincipal String userId,
+    public BaseResponse<RecordResponseDto> noImgRecord(@AuthenticationPrincipal HashMap<String,String> user,
                                                        @RequestParam (value = "text", required = true) String text,
                                                        @RequestParam (value = "calory", required = false) String calory,
                                                        @RequestParam (value = "carb", required = false) String carb,
@@ -167,6 +168,7 @@ public class RecordApiController {
                                                        @RequestParam (value = "amount", required = false) Double amount,
                                                        @RequestParam (value = "meal", required = true) int meal
     ) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -174,8 +176,8 @@ public class RecordApiController {
             return new BaseResponse<>(EMPTY_JWT);
         }
 
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
@@ -254,7 +256,7 @@ public class RecordApiController {
         }
 
         Record record = Record.createRecord(null, text, date, calory, carb, protein, fat,
-                rdate, rtime, amount, meal, user);
+                rdate, rtime, amount, meal, jwtUser);
 
         Long id = recordService.record(record);
 
@@ -264,15 +266,16 @@ public class RecordApiController {
 
     //[POST] 1-2 식단 날짜별 조회
     @PostMapping("/daterecord")
-    public BaseResponse<DateRecordResponseDto> dateRecords(@AuthenticationPrincipal String userId, @RequestBody @Valid DateRecordRequestDto request) {
+    public BaseResponse<DateRecordResponseDto> dateRecords(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid DateRecordRequestDto request) {
+        String userId = user.get("userIdx");
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 
@@ -325,22 +328,23 @@ public class RecordApiController {
         records.add(b); records.add(l); records.add(d);
 
         return new BaseResponse<>(new DateRecordResponseDto(totalCalory.intValue(), totalCarb.intValue(), totalPro.intValue(), totalFat.intValue(),
-                (int) Math.round(Double.parseDouble(user.getRcal())), (int) Math.round(Double.parseDouble(user.getRcarb())), (int) Math.round(Double.parseDouble(user.getRpro())),
-                (int) Math.round(Double.parseDouble(user.getRfat())),
+                (int) Math.round(Double.parseDouble(jwtUser.getRcal())), (int) Math.round(Double.parseDouble(jwtUser.getRcarb())), (int) Math.round(Double.parseDouble(jwtUser.getRpro())),
+                (int) Math.round(Double.parseDouble(jwtUser.getRfat())),
                 records));
     }
 
     //[POST] 1-3 식단 상세조회
     @PostMapping("detailrecord")
-    public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
+    public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 
@@ -357,7 +361,7 @@ public class RecordApiController {
 
     // [POST] 1-5  식단 수정(이미지O)
     @PostMapping("/record-update")
-    public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal String userId,
+    public BaseResponse<RecordResponseDto> updateResponse(@AuthenticationPrincipal HashMap<String,String> user,
                                                           @RequestParam (value = "recordId", required = true) int recordId,
                                                           @RequestParam (value = "image", required = false) MultipartFile multipartFile,
                                                           @RequestParam (value = "text", required = true) String text,
@@ -370,6 +374,7 @@ public class RecordApiController {
                                                           @RequestParam (value = "amount", required = false) Double amount,
                                                           @RequestParam (value = "meal", required = true) int meal
     ) throws IOException {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -377,8 +382,8 @@ public class RecordApiController {
             return new BaseResponse<>(EMPTY_JWT);
         }
 
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 
@@ -475,10 +480,10 @@ public class RecordApiController {
         Long id;
         if(multipartFile == null || multipartFile.isEmpty()) {
             id = recordService.update(Long.valueOf(recordId), null, text, date, calory, carb, protein, fat,
-                    rdate, rtime, amount, meal, user);
+                    rdate, rtime, amount, meal, jwtUser);
         } else {
             id = recordService.update(Long.valueOf(recordId), imgUrl, text, date, calory, carb, protein, fat,
-                    rdate, rtime, amount, meal, user);
+                    rdate, rtime, amount, meal, jwtUser);
         }
 
         return new BaseResponse<>(new RecordResponseDto(id.intValue()));
@@ -487,7 +492,8 @@ public class RecordApiController {
 
     // [DELETE] 1-7 식단 삭제
     @DeleteMapping
-    public BaseResponse<String> deleteRecord(@AuthenticationPrincipal String userId, @RequestBody @Valid RecordDeleteRequestDto request) {
+    public BaseResponse<String> deleteRecord(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid RecordDeleteRequestDto request) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -495,8 +501,8 @@ public class RecordApiController {
             return new BaseResponse<>(EMPTY_JWT);
         }
 
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 

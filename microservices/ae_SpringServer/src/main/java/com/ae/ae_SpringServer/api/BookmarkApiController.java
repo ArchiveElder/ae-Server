@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -33,15 +34,16 @@ public class BookmarkApiController {
 
     //[POST] 7-1 북마크 등록
     @PostMapping
-    public BaseResponse<CreateBookmarkResponseDto> createBookmarkResponse(@AuthenticationPrincipal String userId,
+    public BaseResponse<CreateBookmarkResponseDto> createBookmarkResponse(@AuthenticationPrincipal HashMap<String,String> user,
                                                                           @RequestBody @Valid BookmarkRequestDto request) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
+        User jwtUser = userService.findOne(Long.valueOf(userId));
         if (request.getBistroId() == null || request.getBistroId().equals("")){
             return new BaseResponse<>(POST_BOOKMARK_NO_BISTRO_ID);
         }
@@ -58,7 +60,7 @@ public class BookmarkApiController {
         if(bistro == null) return new BaseResponse<>(POST_BOOKMARK_WRONG_BISTRO);
         Bistro bistro_v1 = bistroService.findV1One(request.getBistroId());
 
-        Bookmark bookmark = Bookmark.createBookmark(user, bistro_v1, request.getBistroId());
+        Bookmark bookmark = Bookmark.createBookmark(jwtUser, bistro_v1, request.getBistroId());
         Long id = bookmarkService.create(bookmark);
 
         return new BaseResponse<>(new CreateBookmarkResponseDto(id.intValue()));
@@ -66,7 +68,8 @@ public class BookmarkApiController {
 
     //[GET] 7-2 즐겨찾기 조회
     @GetMapping("/bookmarklist")
-    public BaseResponse<ResResponse> bookmarkList(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResResponse> bookmarkList(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
@@ -90,8 +93,9 @@ public class BookmarkApiController {
 
     //[DELETE] 7-3 즐겨찾기 삭제
     @DeleteMapping
-    public BaseResponse<CreateBookmarkResponseDto> deleteBookmark(@AuthenticationPrincipal String userId,
+    public BaseResponse<CreateBookmarkResponseDto> deleteBookmark(@AuthenticationPrincipal HashMap<String,String> user,
                                                                   @RequestBody @Valid BookmarkRequestDto request){
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
