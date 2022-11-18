@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.EMPTY_JWT;
@@ -26,15 +27,16 @@ public class AnalysisApiController {
 
     //[GET] 5-1 식단분석
     @GetMapping
-    public BaseResponse<AnalysisResponseDto> analysisResponse(@AuthenticationPrincipal String userId) {
+    public BaseResponse<AnalysisResponseDto> analysisResponse(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         List<DateAnalysisDto> findWeekRecords = analysisService.findRecordsV3(Long.valueOf(userId));

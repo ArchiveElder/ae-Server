@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
+import java.util.HashMap;
 import java.util.List;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.EMPTY_JWT;
@@ -30,15 +31,16 @@ public class FoodApiController {
 
     //[GET] 2-1 모든 음식 검색
     @GetMapping("/search-all")
-    public BaseResponse<ResResponse> foods(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResResponse> foods(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         List<Food> findFoods = foodService.findAllFoods();
@@ -51,15 +53,16 @@ public class FoodApiController {
     }
     //[POST] 2-2 음식 1개 검색
     @PostMapping("/search-one")
-    public BaseResponse<ResResponse> foodResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateFoodRequest request){
+    public BaseResponse<ResResponse> foodResponse(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid CreateFoodRequest request){
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(userId));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
 

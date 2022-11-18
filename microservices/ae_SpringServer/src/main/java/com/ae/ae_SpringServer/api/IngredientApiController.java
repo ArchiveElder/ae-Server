@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.HashMap;
 import java.util.List;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.EMPTY_JWT;
@@ -25,7 +27,8 @@ public class IngredientApiController {
 
     //[GET] 9-1 모든 재료 조회
     @GetMapping
-    public BaseResponse<ResResponse> ingredients(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResResponse> ingredients(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
