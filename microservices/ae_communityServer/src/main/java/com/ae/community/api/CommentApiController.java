@@ -20,7 +20,7 @@ import java.util.HashMap;
 @Api(tags = "Comment API", description = "댓글 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/comment")
+@RequestMapping("/community/comment")
 public class CommentApiController {
     private final CommentService commentService;
     private final UserValidationController userValidationController;

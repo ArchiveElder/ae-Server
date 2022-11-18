@@ -20,7 +20,7 @@ import java.util.Optional;
 @Api(tags = "Scrap API", description = "스크랩 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/scrap")
+@RequestMapping("/community/scrap")
 public class ScrapApiController {
     private final ScrapService scrapService;
     private final UserValidationController userValidationController;

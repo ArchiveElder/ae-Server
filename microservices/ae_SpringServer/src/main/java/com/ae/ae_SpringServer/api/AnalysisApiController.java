@@ -9,6 +9,7 @@ import com.ae.ae_SpringServer.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -18,12 +19,13 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.INVALID_JWT;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/analysis")
 public class AnalysisApiController {
     private final AnalysisService analysisService;
     private final UserService userService;
 
     //[GET] 5-1 식단분석
-    @GetMapping("v3/analysis")
+    @GetMapping
     public BaseResponse<AnalysisResponseDto> analysisResponse(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);

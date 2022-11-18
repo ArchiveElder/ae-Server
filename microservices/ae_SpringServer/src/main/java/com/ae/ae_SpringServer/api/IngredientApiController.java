@@ -8,6 +8,7 @@ import com.ae.ae_SpringServer.service.IngredientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import java.util.List;
 
@@ -18,11 +19,12 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/ingredient")
 public class IngredientApiController {
     private final IngredientService ingredientService;
 
     //[GET] 9-1 모든 재료 조회
-    @GetMapping("/api/v2/ingredient")
+    @GetMapping
     public BaseResponse<ResResponse> ingredients(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);

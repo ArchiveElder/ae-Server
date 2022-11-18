@@ -11,10 +11,7 @@ import com.ae.ae_SpringServer.service.UserService;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -26,12 +23,13 @@ import static java.util.stream.Collectors.toList;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/food")
 public class FoodApiController {
     private final FoodService foodService;
     private final UserService userService;
 
     //[GET] 2-1 모든 음식 검색
-    @GetMapping("/api/v2/foodname")
+    @GetMapping("/search-all")
     public BaseResponse<ResResponse> foods(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -52,7 +50,7 @@ public class FoodApiController {
 
     }
     //[POST] 2-2 음식 1개 검색
-    @PostMapping("/api/v2/food")
+    @PostMapping("/search-one")
     public BaseResponse<ResResponse> foodResponse(@AuthenticationPrincipal String userId, @RequestBody @Valid CreateFoodRequest request){
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);

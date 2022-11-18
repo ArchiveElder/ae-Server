@@ -31,7 +31,7 @@ import java.util.List;
 @Api(tags = "Posting API", description = "게시글 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/posting")
+@RequestMapping("/community/posting")
 public class PostingApiController {
 
     private final PostingService postingService;

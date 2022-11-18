@@ -25,13 +25,14 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/chaebbi/bookmark")
 public class BookmarkApiController {
     private final BookmarkService bookmarkService;
     private final UserService userService;
     private final BistroService bistroService;
 
     //[POST] 7-1 북마크 등록
-    @PostMapping("api/v2/bookmark")
+    @PostMapping
     public BaseResponse<CreateBookmarkResponseDto> createBookmarkResponse(@AuthenticationPrincipal String userId,
                                                                           @RequestBody @Valid BookmarkRequestDto request) {
         if(userId.equals("INVALID JWT")){
@@ -64,7 +65,7 @@ public class BookmarkApiController {
     }
 
     //[GET] 7-2 즐겨찾기 조회
-    @GetMapping("api/v2/bookmarklist")
+    @GetMapping("/bookmarklist")
     public BaseResponse<ResResponse> bookmarkList(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -88,7 +89,7 @@ public class BookmarkApiController {
     }
 
     //[DELETE] 7-3 즐겨찾기 삭제
-    @DeleteMapping("api/v2/del/bookmark")
+    @DeleteMapping
     public BaseResponse<CreateBookmarkResponseDto> deleteBookmark(@AuthenticationPrincipal String userId,
                                                                   @RequestBody @Valid BookmarkRequestDto request){
         if(userId.equals("INVALID JWT")){
