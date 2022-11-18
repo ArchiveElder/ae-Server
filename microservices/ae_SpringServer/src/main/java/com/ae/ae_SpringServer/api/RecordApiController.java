@@ -11,7 +11,7 @@ import com.ae.ae_SpringServer.dto.response.*;
 import com.ae.ae_SpringServer.dto.response.v2.DetailRecordResponseDtoV2;
 import com.ae.ae_SpringServer.service.RecordService;
 import com.ae.ae_SpringServer.service.UserService;
-import com.ae.ae_SpringServer.aws.S3Uploader;
+import com.ae.ae_SpringServer.config.s3.S3Uploader;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
