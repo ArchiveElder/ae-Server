@@ -22,7 +22,7 @@ import java.util.Optional;
 @Api(tags = "Thumbup API", description = "좋아요 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/thumbup")
+@RequestMapping("/community/thumbup")
 public class ThumbupApiController {
     private final ThumbupService thumbupService;
 
