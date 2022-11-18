@@ -67,6 +67,47 @@ public class JwtProvider {
 
     }
 
+    // Token 내용을 뜯어서 userIdx, nickname,
+    public String getUserIdx(String token) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("userIdx", String.class);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-USERIDX";
+        }
+    }
+    public String getNickname(String token) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("nickname", String.class);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-NICKNAME";
+        }
+    }
+    public String getIcon(String token) {
+        try{
+            return Jwts.parser()
+                    .setSigningKey(secretKey)
+                    .parseClaimsJws(token)
+                    .getBody()
+                    .get("icon", String.class);
+        }catch (Exception ex) {
+            ex.printStackTrace();
+            log.error("*** token 내용에 에러가 있음 -- JwtProvider");
+            return "INVALID JWT-ICON";
+        }
+    }
+
 
     /*
        // jwt의 유효성 및 만료일자 확인

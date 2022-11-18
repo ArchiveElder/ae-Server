@@ -4,6 +4,7 @@ import com.ae.community.domain.Posting;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
@@ -33,4 +34,9 @@ public interface PostingRepository extends JpaRepository<Posting, Long>, CrudRep
     Page<Posting> findByBoardName(String boardName, Pageable pageable);
 
     Long countByBoardName(String boardName);
+
+    @Transactional
+    @Modifying
+    @Query("update Posting p set p.nickname = :nickname where p.userIdx = :userIdx")
+    void updateNickname(String nickname, Long userIdx);
 }

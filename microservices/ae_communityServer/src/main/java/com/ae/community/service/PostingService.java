@@ -61,6 +61,10 @@ public class PostingService {
 
     }
 
+    public void updateNickname(String nickname, Long userIdx) {
+        postingRepository.updateNickname(nickname, userIdx);
+    }
+
     public CheckMyPostsDto checkMyPosts(Long userIdx, String nickname, int icon, Pageable pageable) {
         CheckMyPostsDto checkMyPosts = new CheckMyPostsDto();
         Page<Posting> postings = postingRepository.findAllByUserIdx(userIdx, pageable);

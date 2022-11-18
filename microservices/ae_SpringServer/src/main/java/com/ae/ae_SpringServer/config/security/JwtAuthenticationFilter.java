@@ -22,6 +22,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.HashMap;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -42,14 +43,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             if (token != null && !token.equalsIgnoreCase("null")) {
                 // userId 가져오기. 위조된 경우 예외 처리된다.
 
-                    String userId = jwtProvider.validateAndGetUserId(token);
-                    if(userId.equals("INVALID JWT")) {
-                        log.info("*** This token is invlid*** ");
+                    String userIdx = jwtProvider.getUserIdx(token);
+                    String nickname = jwtProvider.getNickname(token);
+                    String icon = jwtProvider.getIcon(token);
+                    if(userIdx.equals("INVALID JWT-USERIDX") || nickname.equals("INVALID JWT-NICKNAME") || icon.equals("INVALID JWT-ICON")) {
+                        log.info("*** This token is invalid! *** ");
                     }
-                    log.info("Authenticated user ID : " + userId );
-                    // 인증 완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
+                    log.info("Authenticated user ID : " + userIdx );
+
+                    HashMap<String,String> user = new HashMap<>();
+                    user.put("userIdx", userIdx);
+                    user.put("icon", icon);
+                    user.put("nickname", nickname);
+
+
+                // 인증 완료. SecurityContextHolder에 등록해야 인증된 사용자라고 생각한다.
                     AbstractAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                            userId, // 인증된 사용자의 정보. 문자열이 아니어도 아무것이나 넣을 수 있다.
+                            user, // 인증된 사용자의 정보. 문자열이 아니어도 아무것이나 넣을 수 있다.
                             null,
                             AuthorityUtils.NO_AUTHORITIES
                     );
@@ -57,6 +67,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContext securityContext = SecurityContextHolder.createEmptyContext();
                     securityContext.setAuthentication(authentication);
                     SecurityContextHolder.setContext(securityContext);
+            }
+            if(token ==null) {
+                log.info("** token is null, Please check ");
             }
         } catch (Exception ex) {
             logger.error("Could not set user authentication in security context", ex);

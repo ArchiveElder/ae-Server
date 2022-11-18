@@ -1,5 +1,6 @@
 package com.ae.ae_SpringServer.api;
 
+import com.ae.ae_SpringServer.component.CommunityDiscoveryClient;
 import com.ae.ae_SpringServer.config.BaseResponse;
 import com.ae.ae_SpringServer.config.security.JwtProvider;
 import com.ae.ae_SpringServer.domain.User;
@@ -33,6 +34,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.Optional;
 
 import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
@@ -42,6 +44,7 @@ import static com.ae.ae_SpringServer.config.BaseResponseStatus.*;
 @RequestMapping("/chaebbi/user")
 public class UserApiController {
     private final UserService userService;
+    private final CommunityDiscoveryClient client;
     private final JwtProvider jwtProvider;
     private final PasswordEncoder passwordEncoder;
 
@@ -160,15 +163,16 @@ public class UserApiController {
 
     // [PUT] 3-2 회원 정보 수정 for version3
     @PutMapping("/info-update")
-    public BaseResponse<String>  update(@AuthenticationPrincipal String userId, @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
-        if(userId.equals("INVALID JWT")){
+    public BaseResponse<String>  update(@AuthenticationPrincipal HashMap<String,String> user,
+                                        @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
+        if(user.get("userIdx").equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
-        if(userId == null) {
+        if(user.get("userIdx") == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtUser = userService.findOne(Long.valueOf(user.get("userIdx")));
+        if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userUpdateRequestDto.getAge() < 1) {
@@ -194,8 +198,10 @@ public class UserApiController {
             return new BaseResponse<>(PUT_USER_INVALID_ACTIVITY);
         }
 
-        userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
-        return new BaseResponse<>(userId + "번  회원 정보 수정되었습니다");
+        client.updateNickname(user.get("userIdx"), userUpdateRequestDto.getNickname());
+
+        userService.updateV3(Long.valueOf(user.get("userIdx")), userUpdateRequestDto);
+        return new BaseResponse<>(user.get("userIdx") + "번  회원 정보 수정되었습니다");
     }
 
     // [DELETE] 3-4 회원 탈퇴
