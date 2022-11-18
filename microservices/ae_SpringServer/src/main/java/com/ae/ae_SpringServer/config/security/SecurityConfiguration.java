@@ -28,11 +28,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/v2/login").permitAll()
-                .antMatchers("/api/v2/apple-login").permitAll()
-                .antMatchers("/api/login").permitAll()
-                .antMatchers("/api/apple-login").permitAll()
-                .antMatchers("/v3/nicknamecheck").permitAll()
+                .antMatchers("/chaebbi/user/kakao-login").permitAll()
+                .antMatchers("/chaebbi/user/apple-login").permitAll()
+                .antMatchers("/chaebbi/user/check-nickname").permitAll()
                 .anyRequest().authenticated();
 
         http.addFilterAfter(jwtAuthenticationFilter, CorsFilter.class);
