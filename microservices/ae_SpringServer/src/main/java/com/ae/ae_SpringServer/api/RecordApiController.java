@@ -334,7 +334,7 @@ public class RecordApiController {
     }
 
     //[POST] 1-3 식단 상세조회
-    @PostMapping("detailrecord")
+    @PostMapping("/detailrecord")
     public BaseResponse<ResultResponse> recordResponse(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody @Valid DetailRecordRequestDto request) throws BaseException {
         String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
