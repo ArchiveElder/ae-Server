@@ -110,23 +110,22 @@ public class BistroApiController {
         return new BaseResponse<>(new CategoryListResponseDtoV2(categories, listDtos.size(), listDtos));
     }
 
-    //[POST] 6-3 (지도)음식점 전체 조회
+    // [POST] 6-3 지도 음식점 전체 조회
     @GetMapping("/allbistro")
-    public BaseResponse<ResultResponse> allBistro(@AuthenticationPrincipal HashMap<String,String> user) {
-        String userId = user.get("userIdx");
+    public BaseResponse<ResultResponse> allBistroV3(@AuthenticationPrincipal String userId) {
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User jwtUser = userService.findOne(Long.valueOf(userId));
-        if (jwtUser == null) {
+        User user = userService.findOne(Long.valueOf(userId));
+        if (user == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         List<BistroV2> allBistro = bistroService.getBistroV2();
         List<BistroV2> bookmark = bookmarkService.findBookmarkV2(Long.valueOf(userId));
-        List<BistroResponseDtoV2> bistroDtos = new ArrayList<>();
+        List<BistroResponseDto> bistroDtos = new ArrayList<>();
         for (BistroV2 bistro : allBistro){
             int isBookmark;
             if(bookmark.indexOf(bistro) != -1) {
@@ -134,8 +133,9 @@ public class BistroApiController {
             } else {
                 isBookmark = 0;
             }
-            bistroDtos.add(new BistroResponseDtoV2(isBookmark, bistro.getId(), bistro.getCategory(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(),
-                    bistro.getTel(), bistro.getMenu(), Double.parseDouble(bistro.getLa()), Double.parseDouble(bistro.getLo()), bistro.getBistroUrl()));
+            bistroDtos.add(new BistroResponseDto(isBookmark, bistro.getId(), bistro.getName(), bistro.getRAddr(), bistro.getLAddr(),
+                    bistro.getTel(), bistro.getMenu(), Double.parseDouble(bistro.getLa()), Double.parseDouble(bistro.getLo()), bistro.getBistroUrl(), bistro.getMainCategory(),
+                    bistro.getMiddleCategory(), bistro.getWide(), bistro.getMiddle()));
         }
         return new BaseResponse<>(new ResultResponse(bistroDtos));
     }
