@@ -49,11 +49,13 @@ public class User {
 
     public static User createUser(String kakao) {
         User user = new User();
+        user.setNickname(kakao);
         user.setKakao(kakao);
         return user;
     }
     public static User createAppleUser(String apple){
         User user = new User();
+        user.setNickname(apple);
         user.setApple(apple);
         return user;
     }
