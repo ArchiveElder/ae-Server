@@ -241,4 +241,21 @@ public class PostingService {
     }
 
 
+    public PostForEditDto detailForEdit(Long userIdx, Long postIdx, Posting post, List<Images> imageList) {
+        PostForEditDto postforEditDto = new PostForEditDto();
+        postforEditDto.setPostIdx(post.getIdx());
+        postforEditDto.setTitle(post.getTitle());
+        postforEditDto.setContent(post.getContent());
+        postforEditDto.setBoardName(post.getBoardName());
+        postforEditDto.setUserIdx(post.getUserIdx());
+        if(imageList.size() != 0) {
+            List<ImagesListDto> dtoList = imageList.stream()
+                    .map(m -> new ImagesListDto(m.getImgUrl(), m.getImgRank()))
+                    .collect(Collectors.toList());
+            postforEditDto.setImagesLists(dtoList);
+
+        } else postforEditDto.setImagesLists(null);
+
+        return postforEditDto;
+    }
 }
