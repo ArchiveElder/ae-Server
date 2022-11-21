@@ -122,7 +122,7 @@ public class UserService {
     }
 
 
-    public void updateV3(Long id, UserUpdateRequestDtoV3 dto) {
-        userRepository.updateV3(id, dto);
+    public User updateV3(Long id, UserUpdateRequestDtoV3 dto) {
+        return userRepository.updateV3(id, dto);
     }
 }

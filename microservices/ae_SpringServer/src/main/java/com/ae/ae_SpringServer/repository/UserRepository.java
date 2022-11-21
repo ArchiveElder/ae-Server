@@ -146,10 +146,10 @@ public class UserRepository {
 
     }
 
-    public void updateV3(Long id, UserUpdateRequestDtoV3 dto) {
-        User u = findOne(id);
-        String name = u.getName();
-        int gender = u.getGender();
+    public User updateV3(Long id, UserUpdateRequestDtoV3 dto) {
+        User user = findOne(id);
+        String name = user.getName();
+        int gender = user.getGender();
 
         CalcRequestDto calcRequestDto = new CalcRequestDto(name, dto.getAge(), gender, dto.getHeight(), dto.getWeight(), dto.getActivity());
         CalcNutrientDtos calcNutrientDtos = CalcNutrients.calcNutrientDtos(calcRequestDto);
@@ -167,5 +167,7 @@ public class UserRepository {
                 .setParameter("fat", calcNutrientDtos.getRfat())
                 .setParameter("id", id)
                 .executeUpdate();
+
+        return findOne(id);
     }
 }

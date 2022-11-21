@@ -11,10 +11,7 @@ import com.ae.ae_SpringServer.dto.request.UserUpdateRequestDto;
 import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
 import com.ae.ae_SpringServer.dto.request.v3.UserInfoResponseDtoV3;
 import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
-import com.ae.ae_SpringServer.dto.response.AppleLoginResponse;
-import com.ae.ae_SpringServer.dto.response.LoginResponseDto;
-import com.ae.ae_SpringServer.dto.response.UserInfoResponseDto;
-import com.ae.ae_SpringServer.dto.response.UserNicknameResponseDto;
+import com.ae.ae_SpringServer.dto.response.*;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.RequiredArgsConstructor;
@@ -98,7 +95,7 @@ public class UserApiController {
 
     // [POST] 3-3  회원 등록 (version 3 )
     @PostMapping("/signup")
-    public BaseResponse<String> signup(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody SignupRequestDtoV3 signupRequestDto) {
+    public BaseResponse<UserResponseDto> signup(@AuthenticationPrincipal HashMap<String,String> user, @RequestBody SignupRequestDtoV3 signupRequestDto) {
         String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
@@ -142,7 +139,8 @@ public class UserApiController {
             return new BaseResponse<>(POST_USER_INVALID_ACTIVITY);
         }
         userService.signupNickname(Long.valueOf(userId), signupRequestDto);
-        return new BaseResponse<>(userId + "번  회원 등록되었습니다");
+        User u = userService.findOne(Long.valueOf(userId));
+        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, signupRequestDto.getNickname())));
     }
 
     // [GET] 3-1 회원 정보 조회 for version3
@@ -165,12 +163,13 @@ public class UserApiController {
 
     // [PUT] 3-2 회원 정보 수정 for version3
     @PutMapping("/info-update")
-    public BaseResponse<String>  update(@AuthenticationPrincipal HashMap<String,String> user,
-                                        @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
-        if(user.get("userIdx").equals("INVALID JWT")){
+    public BaseResponse<UserResponseDto>  update(@AuthenticationPrincipal HashMap<String,String> user,
+                                                 @RequestBody UserUpdateRequestDtoV3 userUpdateRequestDto) {
+        String userId = user.get("userIdx");
+        if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
-        if(user.get("userIdx") == null) {
+        if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
         User jwtUser = userService.findOne(Long.valueOf(user.get("userIdx")));
@@ -200,10 +199,10 @@ public class UserApiController {
             return new BaseResponse<>(PUT_USER_INVALID_ACTIVITY);
         }
 
-        client.updateNickname(user.get("userIdx"), userUpdateRequestDto.getNickname());
+        client.updateNickname(userId, userUpdateRequestDto.getNickname());
 
-        userService.updateV3(Long.valueOf(user.get("userIdx")), userUpdateRequestDto);
-        return new BaseResponse<>(user.get("userIdx") + "번  회원 정보 수정되었습니다");
+        User u =userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
+        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, userUpdateRequestDto.getNickname())));
     }
 
     // [DELETE] 3-4 회원 탈퇴
