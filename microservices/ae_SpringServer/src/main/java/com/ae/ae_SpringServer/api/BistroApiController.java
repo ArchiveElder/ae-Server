@@ -112,15 +112,16 @@ public class BistroApiController {
 
     // [POST] 6-3 지도 음식점 전체 조회
     @GetMapping("/allbistro")
-    public BaseResponse<ResultResponse> allBistroV3(@AuthenticationPrincipal String userId) {
+    public BaseResponse<ResultResponse> allBistroV3(@AuthenticationPrincipal HashMap<String,String> user) {
+        String userId = user.get("userIdx");
         if(userId.equals("INVALID JWT")){
             return new BaseResponse<>(INVALID_JWT);
         }
         if(userId == null) {
             return new BaseResponse<>(EMPTY_JWT);
         }
-        User user = userService.findOne(Long.valueOf(userId));
-        if (user == null) {
+        User jwtuser = userService.findOne(Long.valueOf(userId));
+        if (jwtuser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
         List<BistroV2> allBistro = bistroService.getBistroV2();
