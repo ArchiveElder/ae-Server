@@ -150,7 +150,7 @@ public class PostingService {
             for(Comment comment: comments) {
                 String writerNickname = comment.getNickname();
                 Long writerUserIdx = comment.getUserIdx();
-                commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerUserIdx, writerNickname, (int) (Math.random() * 10)
+                commentsListDtos.add(new CommentsListDto(comment.getIdx(), writerUserIdx, writerNickname, comment.getIcon()
                         , new SimpleDateFormat("yyyy.MM.dd HH:mm").format(comment.getCreatedAt())
                         ,comment.getContent()));
             }
