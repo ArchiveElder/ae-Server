@@ -197,4 +197,25 @@ public class PostingApiController {
         return ResponseEntity.ok().body(checkMyScrapsDto);
     }
 
+    /**
+     * [Get] 31-8 게시글 1개 조회(수정용) API
+     * */
+    @ApiOperation(value = "[GET] 31-8  게시글 1개 조회(수정용)  ", notes = "게시글 id로 게시글의 상세내용을 조회 합니다")
+    @GetMapping("/editpost/{userIdx}/{postIdx}")
+    public ResponseEntity<PostForEditDto> getaPostforEdit(@PathVariable (value = "userIdx") Long userIdx,
+                                                          @PathVariable(value = "postIdx") Long postIdx,
+                                                          @AuthenticationPrincipal HashMap<String,String> user,
+                                                          @PageableDefault(size=10) Pageable pageable) {
+        log.info("Post 31-8 /editpost/ " + userIdx + "/ " + postIdx);
+        userValidationController.validateUserByUserIdxAndJwt(userIdx, user);
+        Posting post = postValidationController.validationPostExist(postIdx);
+
+        List<Images> imageList = imagesService.findByPostIdx(postIdx);
+
+        PostForEditDto postforEditDto = postingService.detailForEdit(userIdx, postIdx, post, imageList);
+
+
+        return ResponseEntity.ok().body(postforEditDto);
+    }
+
 }
