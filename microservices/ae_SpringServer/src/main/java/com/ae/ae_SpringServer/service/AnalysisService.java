@@ -1,6 +1,7 @@
 package com.ae.ae_SpringServer.service;
 
 import com.ae.ae_SpringServer.domain.Suggestion;
+import com.ae.ae_SpringServer.domain.User;
 import com.ae.ae_SpringServer.dto.ProblemsDto;
 import com.ae.ae_SpringServer.dto.SuggestionsDto;
 import com.ae.ae_SpringServer.dto.response.AnalysisDto;
@@ -13,6 +14,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -35,6 +38,7 @@ public class AnalysisService {
         int status = 0;
         int ratioCarb, ratioPro, ratioFat, totalCarb, totalPro, totalFat;
         ratioCarb = ratioPro = ratioFat = totalCarb = totalPro = totalFat = 0;
+        User user = userService.findOne(Long.valueOf(userId));
         //받아온 기록이 7개일 경우 : 정상로직 : status = 1
         if(weekRecords.size() == 7) {
             // 식단에 problem check
@@ -51,16 +55,20 @@ public class AnalysisService {
                 totalCarb += dateAnalysisDto.getSumCarb();
                 totalPro += dateAnalysisDto.getSumPro();
                 totalFat += dateAnalysisDto.getSumFat();
-                collect.add(new AnalysisDto(dateAnalysisDto.getDate(), dateAnalysisDto.getSumCal().intValue()));
+                collect.add(new AnalysisDto(dateAnalysisDto.getDate().substring(5,10), dateAnalysisDto.getSumCal().intValue()));
             }
             int sum = totalCarb + totalPro + totalFat;
             ratioCarb = totalCarb * 100 / sum;
             ratioPro = totalPro * 100 / sum;
             ratioFat = totalFat * 100 / sum;
-            return new AnalysisResponseDto(status, ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, problemsList, suggestionList, collect);
+            return new AnalysisResponseDto(status, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.")),
+                    user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat()
+                    ,ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, problemsList, suggestionList, collect);
         }
         //비정상 로직 status = 0
-        else { return new AnalysisResponseDto(status, ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, null, null, null);}
+        else { return new AnalysisResponseDto(status, LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd.")),
+                user.getRcal(), user.getRcarb(), user.getRpro(), user.getRfat(),
+                ratioCarb, ratioPro, ratioFat , totalCarb, totalPro, totalFat, null, null, null);}
     }
     private List<SuggestionsDto> solSuggest(List<ProblemsDto> problemsList) {
         List<SuggestionsDto> suggestionList = new ArrayList<>();
