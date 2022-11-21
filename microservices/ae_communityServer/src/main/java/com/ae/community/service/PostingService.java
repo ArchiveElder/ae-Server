@@ -52,8 +52,8 @@ public class PostingService {
 
     public Posting update(Posting post, String updateTitle, String updateContent, String updateBoardName) {
         Long postIdx = post.getIdx();
-        post.setContent(updateTitle);
-        post.setTitle(updateContent);
+        post.setTitle(updateTitle);
+        post.setContent(updateContent);
         post.setBoardName(updateBoardName);
 
         postingRepository.save(post);
