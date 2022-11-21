@@ -72,7 +72,16 @@ public class PostingService {
                 .map(m-> {
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), icon, nickname, m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    List<Images> images = imagesService.findByPostIdx(m.getIdx());
+                    int hasImg = 0;
+                    if(images.size() == 0) {
+                        hasImg = 0;
+                    } else if(images.size() > 0) {
+                        hasImg = 1;
+                    }
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), m.getIcon(), m.getNickname()
+                            , m.getBoardName(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt())
+                            , hasImg, thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyPosts.setPostsLists(postsLists);
@@ -89,7 +98,16 @@ public class PostingService {
                 .map(m-> {
                     List<Thumbup> thumbups = thumbupService.findAllByPostIdx(m.getIdx());
                     List<Comment> comments = commentService.findAllByPostIdx(m.getIdx());
-                    return new PostsListDto(m.getIdx(), m.getUserIdx(), m.getIcon(), m.getNickname(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt()), thumbups.size(), comments.size());
+                    List<Images> images = imagesService.findByPostIdx(m.getIdx());
+                    int hasImg = 0;
+                    if(images.size() == 0) {
+                        hasImg = 0;
+                    } else if(images.size() > 0) {
+                        hasImg = 1;
+                    }
+                    return new PostsListDto(m.getIdx(), m.getUserIdx(), m.getIcon(), m.getNickname()
+                            ,m.getBoardName(), m.getTitle(), m.getContent(), new SimpleDateFormat("yyyy.MM.dd HH:mm").format(m.getCreatedAt())
+                            ,hasImg, thumbups.size(), comments.size());
                 })
                 .collect(Collectors.toList());
         checkMyScraps.setPostsLists(postsLists);
