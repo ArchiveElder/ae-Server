@@ -53,6 +53,6 @@ public class CommentService {
     }
 
     public void maskNickname(Long withDrawUserIdx) {
-        commentRepository.updateNickname("", withDrawUserIdx);
+        commentRepository.updateNickname("알수없음", withDrawUserIdx);
     }
 }

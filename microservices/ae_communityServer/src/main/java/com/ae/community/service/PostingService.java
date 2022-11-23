@@ -279,6 +279,6 @@ public class PostingService {
     }
 
     public void maskNickname(Long withDrawUserIdx) {
-        postingRepository.updateNickname("", withDrawUserIdx);
+        postingRepository.updateNickname("알수없음", withDrawUserIdx);
     }
 }
