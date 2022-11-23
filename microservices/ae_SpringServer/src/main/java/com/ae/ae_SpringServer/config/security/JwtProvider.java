@@ -48,14 +48,14 @@ public class JwtProvider {
                 .setExpiration(expiryDate)
                 .compact();
     }
-    public String createTokenNewNickname(User user, String nickname) {
+    public String createTokenNewNickname(User user, String nickname, int icon) {
         Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
 
         return Jwts.builder()
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .setIssuer("app")
                 .claim("userIdx", user.getId().toString())
-                .claim("icon", Integer.toString(user.getIcon()))
+                .claim("icon", icon)
                 .claim("nickname", nickname)
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)

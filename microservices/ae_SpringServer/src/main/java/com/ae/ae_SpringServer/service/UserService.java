@@ -63,11 +63,8 @@ public class UserService {
         return userRepository.findByKakao(kakao);
     }
 
-    public void signup(Long id, SignupRequestDto dto) {
-        userRepository.signup(id, dto);
-    }
-    public void signupNickname(Long id, SignupRequestDtoV3 dto) {
-        userRepository.signupNickname(id, dto);
+    public int signupNickname(Long id, SignupRequestDtoV3 dto) {
+        return userRepository.signupNickname(id, dto);
     }
 
     public void update(Long id, UserUpdateRequestDto dto) {
