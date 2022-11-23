@@ -138,9 +138,9 @@ public class UserApiController {
         if(signupRequestDto.getActivity() != 25 && signupRequestDto.getActivity() != 33 && Integer.valueOf(signupRequestDto.getActivity()) != 40) {
             return new BaseResponse<>(POST_USER_INVALID_ACTIVITY);
         }
-        userService.signupNickname(Long.valueOf(userId), signupRequestDto);
+        int icon = userService.signupNickname(Long.valueOf(userId), signupRequestDto);
         User u = userService.findOne(Long.valueOf(userId));
-        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, signupRequestDto.getNickname())));
+        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, signupRequestDto.getNickname(), icon)));
     }
 
     // [GET] 3-1 회원 정보 조회 for version3
@@ -202,7 +202,7 @@ public class UserApiController {
         client.updateNickname(userId, userUpdateRequestDto.getNickname());
 
         User u =userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
-        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, userUpdateRequestDto.getNickname())));
+        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, userUpdateRequestDto.getNickname(), u.getIcon())));
     }
 
     // [DELETE] 3-4 회원 탈퇴

@@ -37,38 +37,6 @@ public class UserRepository {
         return user.stream().findAny();
     }
 
-    public void signup(Long id, SignupRequestDto dto) {
-        int age = dto.getAge();
-        int gender = dto.getGender();
-        String name = dto.getName();
-        String weight = dto.getWeight();
-        String height = dto.getHeight();
-        int activity = dto.getActivity();
-        int icon = (int)(Math.random() * 13);
-        String date = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy.MM.dd."));
-        CalcRequestDto calcRequestDto = new CalcRequestDto(dto.getName(), dto.getAge(),dto.getGender(), dto.getHeight(), dto.getWeight(), dto.getActivity());
-        CalcNutrientDtos calcNutrientDtos = CalcNutrients.calcNutrientDtos(calcRequestDto);
-
-        em.createQuery("update User u set u.name = :name, u.age = :age, u.gender = :gender, u.height = :height, u.weight = :weight," +
-                        "u.date = :date, u.icon = :icon, u.activity = :activity, u.rcal = :calory, u.rcarb = :carb, " +
-                        "u.rpro = :pro, u.rfat = :fat " +
-                "where u.id = :id")
-                .setParameter("name", name)
-                .setParameter("age", age)
-                .setParameter("gender", gender)
-                .setParameter("height", height)
-                .setParameter("weight", weight)
-                .setParameter("icon", icon)
-                .setParameter("activity", activity)
-                .setParameter("calory", calcNutrientDtos.getRcal())
-                .setParameter("carb", calcNutrientDtos.getRcarb())
-                .setParameter("pro", calcNutrientDtos.getRpro())
-                .setParameter("fat", calcNutrientDtos.getRfat())
-                .setParameter("date", date)
-                .setParameter("id", id)
-                .executeUpdate();
-    }
-
     public void update(Long id, UserUpdateRequestDto dto) {
         User u = findOne(id);
         String name = u.getName();
@@ -113,7 +81,7 @@ public class UserRepository {
                 .getSingleResult();
     }
 
-    public void signupNickname(Long id, SignupRequestDtoV3 dto) {
+    public int signupNickname(Long id, SignupRequestDtoV3 dto) {
         int age = dto.getAge();
         int gender = dto.getGender();
         String nickname = dto.getNickname();
@@ -143,6 +111,7 @@ public class UserRepository {
                 .setParameter("date", date)
                 .setParameter("id", id)
                 .executeUpdate();
+        return icon;
 
     }
 
