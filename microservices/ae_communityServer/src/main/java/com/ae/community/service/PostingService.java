@@ -123,6 +123,7 @@ public class PostingService {
     private Long getGroupPostsCount(String boardName) {
         return postingRepository.countByBoardName(boardName);
     }
+    public Long getUserPostsCount(Long userIdx) {return postingRepository.countByUserIdx(userIdx);}
 
     public Page<Posting> getAllPosts(Pageable pageable) {
         //return postingRepository.findAllPostingWithPagination(pageable);
@@ -275,5 +276,9 @@ public class PostingService {
         } else postforEditDto.setImagesLists(null);
 
         return postforEditDto;
+    }
+
+    public void maskNickname(Long withDrawUserIdx) {
+        postingRepository.updateNickname("", withDrawUserIdx);
     }
 }

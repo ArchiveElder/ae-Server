@@ -12,6 +12,7 @@ import com.ae.ae_SpringServer.dto.request.v3.SignupRequestDtoV3;
 import com.ae.ae_SpringServer.dto.request.v3.UserInfoResponseDtoV3;
 import com.ae.ae_SpringServer.dto.request.v3.UserUpdateRequestDtoV3;
 import com.ae.ae_SpringServer.dto.response.*;
+import com.ae.ae_SpringServer.event.RabbitMQProducer;
 import com.ae.ae_SpringServer.service.UserService;
 import com.nimbusds.jose.shaded.json.JSONObject;
 import lombok.RequiredArgsConstructor;
@@ -43,7 +44,8 @@ public class UserApiController {
     private final UserService userService;
     private final CommunityDiscoveryClient client;
     private final JwtProvider jwtProvider;
-    private final PasswordEncoder passwordEncoder;
+
+    private RabbitMQProducer producer;
 
     //[POST] 4-1 카카오 로그인
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
@@ -221,6 +223,9 @@ public class UserApiController {
         }
 
         userService.delete(Long.valueOf(userId));
+        // rabbiMQ에 탈퇴한 사용자 userIdx를 보냄
+        producer.sendMessage(userId);
+
         return new BaseResponse<>("회원 탈퇴 되었습니다.");
     }
 

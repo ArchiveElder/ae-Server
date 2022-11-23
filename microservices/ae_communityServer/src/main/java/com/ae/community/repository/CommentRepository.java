@@ -28,4 +28,6 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Modifying
     @Query("update Comment c set c.nickname = :nickname where c.userIdx = :userIdx")
     void updateNickname(String nickname, Long userIdx);
+
+    Long countByUserIdx(Long userIdx);
 }
