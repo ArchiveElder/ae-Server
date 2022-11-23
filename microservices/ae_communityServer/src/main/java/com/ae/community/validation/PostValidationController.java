@@ -19,6 +19,7 @@ public class PostValidationController {
     public void validationPost(String content, String title, String boardName){
         if(content == null || content.equals("")) throw new chaebbiException(EMPTY_CONTENT);
         if(title == null || title.equals("")) throw new chaebbiException(EMPTY_TITLE);
+        if(title.length() >= 45) throw new chaebbiException(LONG_TITLE);
         if(boardName == null || boardName.equals("")) throw new chaebbiException(EMPTY_GROUPNAME);
     }
 
