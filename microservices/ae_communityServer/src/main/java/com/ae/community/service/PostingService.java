@@ -189,7 +189,7 @@ public class PostingService {
                 boardName = "일상";
                 break;
             case "recipe":
-                boardName = "레시피 ";
+                boardName = "레시피";
                 break;
             case "question":
                 boardName = "질문";
