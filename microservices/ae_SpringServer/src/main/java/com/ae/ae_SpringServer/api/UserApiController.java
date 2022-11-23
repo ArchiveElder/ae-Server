@@ -45,7 +45,7 @@ public class UserApiController {
     private final CommunityDiscoveryClient client;
     private final JwtProvider jwtProvider;
 
-    private RabbitMQProducer producer;
+    private final RabbitMQProducer producer;
 
     //[POST] 4-1 카카오 로그인
     // 로그인 시에, kakaoprofile로 받은 정보가 db에 있으면 jwt 토큰 발급(status코드는 온보딩 안띄우게). db에 없으면 new user로 저장시키고 jwt 토큰발급(온보딩 띄우게)
@@ -142,7 +142,9 @@ public class UserApiController {
         }
         int icon = userService.signupNickname(Long.valueOf(userId), signupRequestDto);
         User u = userService.findOne(Long.valueOf(userId));
-        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, signupRequestDto.getNickname(), icon)));
+        return new BaseResponse<>(
+                new UserResponseDto(userId, jwtProvider.createTokenNewNickname(
+                        u, signupRequestDto.getNickname(), String.valueOf(icon))));
     }
 
     // [GET] 3-1 회원 정보 조회 for version3
@@ -159,7 +161,10 @@ public class UserApiController {
         if (jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-        return new BaseResponse<>(new UserInfoResponseDtoV3(jwtUser.getNickname(), jwtUser.getGender(), jwtUser.getAge(), jwtUser.getHeight(), jwtUser.getWeight(), jwtUser.getIcon(), jwtUser.getActivity()));
+        return new BaseResponse<>(
+                new UserInfoResponseDtoV3(
+                        jwtUser.getNickname(), jwtUser.getGender(), jwtUser.getAge(), jwtUser.getHeight(), jwtUser.getWeight(),
+                        jwtUser.getIcon(), jwtUser.getActivity()));
 
     }
 
@@ -204,7 +209,9 @@ public class UserApiController {
         client.updateNickname(userId, userUpdateRequestDto.getNickname());
 
         User u =userService.updateV3(Long.valueOf(userId), userUpdateRequestDto);
-        return new BaseResponse<>(new UserResponseDto(userId, jwtProvider.createTokenNewNickname(u, userUpdateRequestDto.getNickname(), u.getIcon())));
+        return new BaseResponse<>(
+                new UserResponseDto(userId, jwtProvider.createTokenNewNickname(
+                        u, userUpdateRequestDto.getNickname(), String.valueOf(u.getIcon()))));
     }
 
     // [DELETE] 3-4 회원 탈퇴
@@ -221,10 +228,11 @@ public class UserApiController {
         if(jwtUser == null) {
             return new BaseResponse<>(INVALID_JWT);
         }
-
-        userService.delete(Long.valueOf(userId));
         // rabbiMQ에 탈퇴한 사용자 userIdx를 보냄
         producer.sendMessage(userId);
+
+        userService.delete(Long.valueOf(userId));
+
 
         return new BaseResponse<>("회원 탈퇴 되었습니다.");
     }

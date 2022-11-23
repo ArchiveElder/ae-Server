@@ -48,7 +48,7 @@ public class JwtProvider {
                 .setExpiration(expiryDate)
                 .compact();
     }
-    public String createTokenNewNickname(User user, String nickname, int icon) {
+    public String createTokenNewNickname(User user, String nickname, String icon) {
         Date expiryDate = Date.from(Instant.now().plus(1, ChronoUnit.DAYS));
 
         return Jwts.builder()
