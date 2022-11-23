@@ -47,4 +47,12 @@ public class CommentService {
         return commentRepository.findAllByPostIdx(postIdx);
 
     }
+
+    public Long getUserCommentsCount(Long userIdx) {
+        return commentRepository.countByUserIdx(userIdx);
+    }
+
+    public void maskNickname(Long withDrawUserIdx) {
+        commentRepository.updateNickname("***", withDrawUserIdx);
+    }
 }
