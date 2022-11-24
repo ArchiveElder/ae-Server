@@ -19,4 +19,8 @@ public interface ThumbupRepository extends JpaRepository<Thumbup, Long> {
     List<Thumbup> findAllByPostIdx(Long postIdx);
 
     Long countByUserIdxAndPostIdx(Long userIdx, Long postIdx);
+
+    Long countByUserIdx(Long userIdx);
+
+    void deleteByUserIdx(Long userIdx);
 }

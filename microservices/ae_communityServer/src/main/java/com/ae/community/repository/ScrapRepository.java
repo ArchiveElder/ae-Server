@@ -12,4 +12,8 @@ public interface ScrapRepository extends JpaRepository<Scrap, Long> {
     Optional<Scrap> findByUserIdxAndPostIdx(Long userIdx, Long postIdx);
 
     Long countByUserIdxAndPostIdx(Long userIdx, Long postIdx);
+
+    Long countByUserIdx(Long userIdx);
+
+    void deleteByUserIdx(Long userIdx);
 }

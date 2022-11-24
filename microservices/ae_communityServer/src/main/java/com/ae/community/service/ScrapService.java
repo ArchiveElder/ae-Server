@@ -36,4 +36,12 @@ public class ScrapService {
     public Long countByUserIdxAndPostIdx(Long userIdx, Long postIdx) {
         return scrapRepository.countByUserIdxAndPostIdx(userIdx, postIdx);
     }
+
+    public Long getUserScrapCount(Long userIdx) {
+        return scrapRepository.countByUserIdx(userIdx);
+    }
+
+    public void deleteUserScrap(Long userIdx) {
+        scrapRepository.deleteByUserIdx(userIdx);
+    }
 }
