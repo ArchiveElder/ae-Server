@@ -20,6 +20,7 @@ public class ImagesService {
     private final S3Uploader s3Uploader;
     private final ImagesRepository imagesRepository;
 
+    @Transactional
     public Images save(Images image) {return  imagesRepository.save(image); }
 
     public Images create(Long postIdx, String imgUrl, int imgRank) {
@@ -31,11 +32,9 @@ public class ImagesService {
     }
 
 
+    @Transactional
     public void deleteByPostIdx(Long postIdx) {
         imagesRepository.deleteByPostIdx(postIdx);
-    }
-
-    public Optional<Images> findByIdx(Long imageIdx) { return imagesRepository.findById(imageIdx);
     }
 
     public List<Images> findByPostIdx(Long postIdx) {
@@ -47,6 +46,7 @@ public class ImagesService {
     }
 
 
+    @Transactional
     public void uploadImages(Long postIdx, List<MultipartFile> multipartFileList) throws IOException {
         int img_rank = 1;
 

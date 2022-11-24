@@ -42,4 +42,13 @@ public class ThumbupService {
         return thumbupRepository.findAllByPostIdx(postIdx);
 
     }
+
+    public Long getUserThumbupCount(Long userIdx) {
+        return thumbupRepository.countByUserIdx(userIdx);
+    }
+
+    @Transactional
+    public void deleteUserThumbup(Long userIdx) {
+        thumbupRepository.deleteByUserIdx(userIdx);
+    }
 }

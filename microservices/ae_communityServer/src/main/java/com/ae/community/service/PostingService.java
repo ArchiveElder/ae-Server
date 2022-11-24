@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
@@ -28,7 +29,10 @@ public class PostingService {
 
     private final ScrapService scrapService;
 
-    public Posting save(Posting post) {  return postingRepository.save(post); }
+    @Transactional
+    public Posting save(Posting post) {
+        return postingRepository.save(post);
+    }
 
     public Posting create(Long userIdx, String content, String title, String boardName, String nickname, int icon) {
         Posting post = new Posting();
@@ -45,11 +49,13 @@ public class PostingService {
     public Optional<Posting> findById(Long postIdx) {return  postingRepository.findById(postIdx); }
 
 
+    @Transactional
     public void deletePost(Long postIdx) {
         imagesService.deleteByPostIdx(postIdx);
         postingRepository.deleteByIdx(postIdx);
     }
 
+    @Transactional
     public Posting update(Posting post, String updateTitle, String updateContent, String updateBoardName) {
         Long postIdx = post.getIdx();
         post.setTitle(updateTitle);
@@ -61,6 +67,7 @@ public class PostingService {
 
     }
 
+    @Transactional
     public void updateNickname(String nickname, Long userIdx) {
         postingRepository.updateNickname(nickname, userIdx);
     }
@@ -278,6 +285,7 @@ public class PostingService {
         return postforEditDto;
     }
 
+    @Transactional
     public void maskNickname(Long withDrawUserIdx) {
         postingRepository.updateNickname("알수없음", withDrawUserIdx);
     }
