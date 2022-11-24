@@ -41,6 +41,7 @@ public class ScrapService {
         return scrapRepository.countByUserIdx(userIdx);
     }
 
+    @Transactional
     public void deleteUserScrap(Long userIdx) {
         scrapRepository.deleteByUserIdx(userIdx);
     }

@@ -26,6 +26,7 @@ public class CommentService {
         commentRepository.deleteByIdx(commentIdx);
     }
 
+    @Transactional
     public void updateNickname(String nickname, Long userIdx) {
         commentRepository.updateNickname(nickname, userIdx);
     }
@@ -52,6 +53,7 @@ public class CommentService {
         return commentRepository.countByUserIdx(userIdx);
     }
 
+    @Transactional
     public void maskNickname(Long withDrawUserIdx) {
         commentRepository.updateNickname("알수없음", withDrawUserIdx);
     }
