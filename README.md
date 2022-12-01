@@ -57,6 +57,6 @@ ae 프로젝트의 종합적인 서버 프로젝트 저장소로, 서비스를 �
 ### Team member
 |Position|Name|Repository|
 |:---:|:---:|---|
-|Server|[김세현](https://early-tithonia-af2.notion.site/KIM-SEHYEON-8d0186298ecc43a797abb8de0436c15e)|https://github.com/Vector1331|
+|Server|[김세현](https://early-tithonia-af2.notion.site/KIM-SEHYEON-9140913e571248d58f9c160490e2d73b)|https://github.com/Vector1331|
 |Server|[김민서](https://www.notion.so/d6d0e962e84942a39a9e527fd602337f)|https://github.com/rosesua318|
 
